@@ -1,23 +1,27 @@
-import tkinter as tk
-from tkinter import simpledialog
-import sys
+def get_rhizoid_diameter():
 
-root = tk.Tk()
-root.withdraw() 
+    import tkinter as tk
+    from tkinter import simpledialog
+    import sys
 
-try:
-    user_input = simpledialog.askfloat(
-        title="Konfiguration", 
-        prompt="Bitte Rhizoid-Durchmesser eingeben (µm):", 
-        initialvalue=15.0,
-        minvalue=5.0, 
-        maxvalue=100.0
-    )
-finally:
-    root.destroy() 
+    root = tk.Tk()
+    root.withdraw() 
 
-if user_input is not None:
-    durchmesser_rhizoid = user_input
-    print(f"Starte Simulation mit Durchmesser: {durchmesser_rhizoid} µm")
-else:
-    sys.exit()
+    try:
+        user_input = simpledialog.askfloat(
+            title="Konfiguration", 
+            prompt="Bitte Rhizoid-Durchmesser eingeben (µm):", 
+            initialvalue=15.0,
+            minvalue=5.0, 
+            maxvalue=100.0
+        )
+    finally:
+        root.destroy() 
+
+    if user_input is not None:
+        durchmesser_rhizoid = user_input
+        print(f"Starte Simulation mit Durchmesser: {durchmesser_rhizoid} µm")
+    else:
+        sys.exit()
+
+    

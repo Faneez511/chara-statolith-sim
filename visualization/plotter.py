@@ -74,3 +74,4 @@ def reset_simulation():
 p.add_key_event("r", reset_simulation)
 p.add_key_event("R", reset_simulation)
 
+p.show(interactive_update=True)
