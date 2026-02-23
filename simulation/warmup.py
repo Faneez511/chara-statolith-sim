@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from config.parameters import LIMIT_X, raumy, ACTIN_DECAY_LENGTH, ACTIN_AXIAL_FORCE, ACTIN_MAX_X, ACTIN_MIN_X, ACTIN_LATERAL_FORCE, N
+from config.parameters import LIMIT_X, ACTIN_DECAY_LENGTH, ACTIN_AXIAL_FORCE, ACTIN_MAX_X, ACTIN_MIN_X, ACTIN_LATERAL_FORCE, N
+from geometry.cell_geometry import raumy
 from ui.input_dialog import get_rhizoid_diameter
 
 durchmesser_rhizoid = get_rhizoid_diameter()
