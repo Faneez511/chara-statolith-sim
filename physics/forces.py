@@ -12,9 +12,17 @@ def compute_forces_single(s, params):
     eta_eff = params.eta_parallel * (1 + f_wand)
     mobility = 1.0 / (6 * np.pi * eta_eff * r) 
 
+    winkel1 = np.radians(params.winkel_in_XY)
+    winkel2 = np.radians(params.winkel_zu_Z)
+
+    gx = np.cos(winkel2) * np.cos(winkel1)
+    gy = np.cos(winkel2) * np.sin(winkel1)
+    gz = np.sin(winkel2)
+    g_vec = np.array([gx, gy, gz])
+
     dp = (p_stato - params.p_cyto) * 1e-12
     F_grav_mag = (4/3) * np.pi * r**3 * dp * params.g_mag
-    v_sed_vec = F_grav_mag * mobility * params.g_vec 
+    v_sed_vec = F_grav_mag * mobility * g_vec 
 
     shield = 1.0
     if params.ACTIN_MIN_X <= x <= params.ACTIN_MAX_X:
@@ -30,3 +38,4 @@ def compute_forces_single(s, params):
     v_total[0] += F_actin_x * mobility
 
     return v_total
+
