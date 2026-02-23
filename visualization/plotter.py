@@ -9,7 +9,7 @@ durchmesser_rhizoid = get_rhizoid_diameter()
 statolithen_data = get_initial_state(N, durchmesser_rhizoid)
 
 
-p = pv.Plotter(shape="1|3", window_size=(1600, 1000), title="Statolithen Simulation")
+p = pv.Plotter(shape="1|2", window_size=(1600, 1000), title="Statolithen Simulation")
 
 actors_main = []
 actors_xy = []
