@@ -5,6 +5,7 @@ LIMIT_X = 45.0                  #Begrenzung Subapkiale Zone
 ACTIN_MAX_X = 45.0
 TIP_POSITION_X = 50.0           #Länge der Zelle in µm
 ACTIN_MIN_X = 20.0              #Begrenzung Apikale Zone
+CELL_WALL = 1.5
 
 #Kräfte/Physik
 
@@ -28,5 +29,6 @@ winkel_zu_Z = 0
 
 dt = 0.01
 TIME_SCALE = 100
+N = 50                          #Anzahl der Statolithen
 
 
