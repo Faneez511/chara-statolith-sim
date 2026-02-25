@@ -25,14 +25,21 @@ class Parameters:
         self.p_cyto = 1.0139 
         self.Kb = 1.38 * 1e-23
         self.Temp = 293
-        self.winkel_in_XY = -90
+        self.winkel_in_XY = 45
         self.winkel_zu_Z = 0
+
+        # Spring network (Actin coupling)
+        
+        self.spring_k = 0.01
+        self.spring_rest = 1.5       # µm – Gleichgewichtsabstand (≈ Partikeldurchmesser)
+        self.spring_cutoff = 5.0      # µm – maximale Kopplungsreichweite
+        
 
 
         #Simulation
 
         self.dt = 0.01
         self.TIME_SCALE = 100
-        self.N = 50                          #Anzahl der Statolithen
+        self.N = 80                          #Anzahl der Statolithen
 
 
