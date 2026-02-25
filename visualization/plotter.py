@@ -23,6 +23,8 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
         actors_main.append(p.add_mesh(sphere, color='blue', smooth_shading=True))
 
     arrow_actor = p.add_mesh(arrow_mesh, color='green')
+    p.show_bounds(grid='back', location='outer', ticks='both')  
+    p.view_isometric(); p.reset_camera()
 
     # --- SUBPLOT 1 ---
     p.subplot(1)
