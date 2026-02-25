@@ -23,14 +23,14 @@ class SimulationEngine:
             self.velocities[i] += compute_forces_single(s, self.params)
             self.velocities[i] += compute_brownian_motion(s, self.params)
 
-        compute_collisions(self.state, self.params)
-
-        r = self.state[i][3]
-        pos = self.state[i][0:3]
+        v_corr = compute_collisions(self.state, self.params)
+        self.velocities += v_corr
 
         for i, s in enumerate(self.state):
-            self.state[i][0:3] += self.velocities[i] * dt
-            self.state[i][0:3] = apply_constraints(pos, r, self.params)
+            r = s[3]
+            pos = s[0:3]
+            new_pos = pos + self.velocities[i] * dt
+            self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
         if self.plotter_objects is not None:
             update_plotter(self.state, self.plotter_objects)
