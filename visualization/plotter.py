@@ -51,6 +51,7 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
     # --- RESET FUNKTION ---
     current_sim_time = [0.0]  # Liste, damit mutable
     def reset_simulation():
+        
         nonlocal current_sim_time
         for i, s in enumerate(sim_state):
             # Reset Positionen
