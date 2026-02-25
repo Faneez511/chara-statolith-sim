@@ -9,7 +9,7 @@ def compute_forces_single(s, params):
     d_wand = max(min(dist_x, dist_y, dist_z), 0)
 
     f_wand = np.exp(-d_wand / params.lambd)
-    eta_eff = params.eta_parallel * (1 + f_wand)
+    eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
     mobility = 1.0 / (6 * np.pi * eta_eff * r) 
 
     winkel1 = np.radians(params.winkel_in_XY)
@@ -18,7 +18,7 @@ def compute_forces_single(s, params):
     gx = np.cos(winkel2) * np.cos(winkel1)
     gy = np.cos(winkel2) * np.sin(winkel1)
     gz = np.sin(winkel2)
-    g_vec = np.array([gx, gy, gz])
+    g_vec = np.array([gx, gy, gz]) * 0
 
     dp = (p_stato - params.p_cyto) * 1e-12
     F_grav_mag = (4/3) * np.pi * r**3 * dp * params.g_mag
@@ -36,6 +36,13 @@ def compute_forces_single(s, params):
     F_actin_x = -k_actin * dx
 
     v_total[0] += F_actin_x * mobility
+
+    # Mittelpunkt der gravisensitiven Zone
+    center = np.array([32.5, 0.0, 0.0])
+    r_vec = s[0:3] - center
+    F_center_strength = 0.03
+    F_center = -F_center_strength * r_vec
+    v_total += F_center
 
     return v_total
 
