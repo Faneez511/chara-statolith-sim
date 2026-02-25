@@ -21,6 +21,7 @@ def get_rhizoid_diameter():
     if user_input is not None:
         durchmesser_rhizoid = user_input
         print(f"Starte Simulation mit Durchmesser: {durchmesser_rhizoid} µm")
+        return float(user_input)
     else:
         sys.exit()
 
