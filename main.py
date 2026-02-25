@@ -35,7 +35,17 @@ p = plotter_objects['plotter']  # Referenz auf den Plotter
 # --- 5. Simulation Engine erstellen ---
 engine = SimulationEngine(sim_state, params, plotter_objects, ellipsoid_pos_x, innen, raumy)
 
+initial_state = np.array(sim_state).copy()
+
 dt = 0.01
+
+# --- Reset-Funktion ---
+def reset_simulation():
+    engine.reset()       # Engine zurücksetzen auf Anfangszustand
+    print("Simulation zurückgesetzt!")
+
+p.add_key_event("r", reset_simulation)
+p.add_key_event("R", reset_simulation)
 
 # --- 6. Simulation Schleife ---
 while True:
