@@ -19,7 +19,7 @@ class Parameters:
         self.ACTIN_LATERAL_FORCE = 2e-11
         self.FORCE_DAMPING = 10.0
 
-        self.g_mag = 9.81 * 1e6              #Gravitationskraft
+        self.g_mag = 10*9.81 * 1e6              #Gravitationskraft
         self.eta_parallel = 139 * 1e-6 
         self.lambd = 5
         self.p_cyto = 1.0139 
