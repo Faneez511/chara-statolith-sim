@@ -49,7 +49,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     sim_warmup = [np.array(s) for s in temp_data]
 
     dt_warm = 0.05
-    steps = 1000
+    steps = 12000
     g_warm = np.array([1, 0, 0]) * 100 * params.g_mag
     eta_warm = 139e-6
 
@@ -62,15 +62,16 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
             x, y, z, r, dens = s
 
             # Wandabstand & Mobility
-            d_wand = max(min(params.LIMIT_X - x, raumy - abs(y), raumy - abs(z)), 0)
-            eta_eff = eta_warm * (1 + np.exp(-d_wand / 5))
-            mobility = 1.0 / (6 * np.pi * eta_eff * r)
+            #d_wand = max(min(params.LIMIT_X - x, raumy - abs(y), raumy - abs(z)), 0)
+            #eta_eff = eta_warm * (1 + np.exp(-d_wand / 5))
+            mobility = 1.0 / (6 * np.pi * eta_warm * r)
 
             # Schwerkraft
             dp = (dens - params.p_cyto) * 1e-12
             velocities[i] += (4/3) * np.pi * r**3 * dp * g_warm * mobility
 
             # Aktin-Kräfte (apikal + basal + lateral)
+            
             dist_to_apex = params.ACTIN_MAX_X - x
             if 0 < dist_to_apex < 3 * params.ACTIN_DECAY_LENGTH:
                 f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
@@ -87,7 +88,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 f_lat = params.ACTIN_LATERAL_FORCE * np.exp(-dist_to_wall / params.ACTIN_DECAY_LENGTH)
                 ny, nz = -y/r_dist, -z/r_dist
                 velocities[i] += np.array([0.0, ny, nz]) * f_lat * mobility
-
+            
         # Kollisionen
         for i in range(len(sim_warmup)):
             for j in range(i + 1, len(sim_warmup)):
@@ -102,7 +103,22 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
 
         # Update Positionen mit Hard Constraints
         for i in range(len(sim_warmup)):
+
+            # 1 Position updaten
             sim_warmup[i][0:3] += velocities[i] * dt_warm
+
+            # 2 Radius wieder auslesen
+            x, y, z = sim_warmup[i][0:3]
+
+            # 3Prüfen ob außerhalb der Ellipse
+            value = (params.LIMIT_X - x/params.LIMIT_X - r)**2 + (y/raumy - r)**2 + (z/raumy - r)**2
+
+            if value > 1.0:
+                scale = 1.0 / np.sqrt(value)
+
+                sim_warmup[i][0] = params.LIMIT_X - scale*(params.LIMIT_X - x)
+                sim_warmup[i][1] = y * scale
+                sim_warmup[i][2] = z * scale
             
 
     print("Sedimentierung abgeschlossen. Speichere Zustand.")
