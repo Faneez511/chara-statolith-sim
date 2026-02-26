@@ -48,16 +48,31 @@ p.add_key_event("r", reset_simulation)
 p.add_key_event("R", reset_simulation)
 
 # --- 6. Simulation Schleife ---
+sim_time = 0.0  # simulierte Zeit
+display_interval = 0.5  # alle 0.5 s GUI-Update für Zeit
+accum_time = 0.0
+
+# Textobjekt für Timer in der Szene erstellen
+
+time_text = p.add_text(f"Simulierte Zeit: 0.00 s", position='lower_right', font_size=14)
+
 while True:
-    engine.step(dt)  # Berechnet neue Positionen
-    
+    engine.step(dt)       # Berechnet neue Positionen
+    sim_time += dt
+    accum_time += dt
+
     # Positionen der Meshes aktualisieren
     update_plotter(engine.state, plotter_objects)
-    
-    # Anzeige aktualisieren
+
+    # Timer nur alle display_interval aktualisieren
+    if accum_time >= display_interval:
+        corner = 1  # obere linke Ecke
+        time_text.SetText(corner, f"Simulierte Zeit: {sim_time:.2f} s")
+        accum_time = 0.0
+
     p.update()
-    
+
     # Beenden, wenn Fenster geschlossen
     if hasattr(p, 'closed') and p.closed:
-        print("Plotter geschlossen – Simulation beendet")
+        print(f"Simulation beendet bei simulierten {sim_time:.2f} s")
         break
