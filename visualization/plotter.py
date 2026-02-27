@@ -10,7 +10,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
     actors_xz = []
 
     # --- SUBPLOT 0 ---
-    arrow_mesh = pv.Arrow(start=(50, 0, 0), direction=(1, 0, 0), scale=7.0, shaft_radius=0.03, tip_length=0.1)
     p.subplot(0)
     p.add_text("3D Ansicht ('R' drücken für Reset)", font_size=10) 
     p.add_mesh(ellipsoid_pos_x, color='r', smooth_shading=True, opacity=0.4)
@@ -22,7 +21,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
         sphere = pv.Sphere(radius=s[3], center=(0,0,0))
         actors_main.append(p.add_mesh(sphere, color='blue', smooth_shading=True))
 
-    arrow_actor = p.add_mesh(arrow_mesh, color='green')
     p.show_bounds(grid='back', location='outer', ticks='both')  
     p.view_isometric(); p.reset_camera()
 
@@ -34,7 +32,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
     for s in sim_state:
         sphere = pv.Sphere(radius=s[3], center=(0,0,0))
         actors_xy.append(p.add_mesh(sphere, color='blue'))
-    arrow_actorXZ = p.add_mesh(arrow_mesh, color='green')
     p.view_xy(); p.enable_parallel_projection(); p.reset_camera()  
 
     # --- SUBPLOT 2 ---
@@ -45,7 +42,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
     for s in sim_state:
         sphere = pv.Sphere(radius=s[3], center=(0,0,0))
         actors_xz.append(p.add_mesh(sphere, color='blue'))
-    arrow_actorXY = p.add_mesh(arrow_mesh, color='green')
     p.view_xz(); p.enable_parallel_projection(); p.reset_camera()  
 
     # --- RESET FUNKTION ---
@@ -71,9 +67,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
         "actors_main": actors_main,
         "actors_xy": actors_xy,
         "actors_xz": actors_xz,
-        "arrow_actor": arrow_actor,
-        "arrow_actorXZ": arrow_actorXZ,
-        "arrow_actorXY": arrow_actorXY,
         "current_sim_time": current_sim_time
     }
 
