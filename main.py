@@ -33,46 +33,49 @@ plotter_objects = initialize_plotter(sim_state, ellipsoid_pos_x, innen)
 p = plotter_objects['plotter']  # Referenz auf den Plotter
 
 # --- 5. Simulation Engine erstellen ---
-engine = SimulationEngine(sim_state, params, plotter_objects, ellipsoid_pos_x, innen, raumy)
+engine = SimulationEngine(sim_state, params)
 
-initial_state = np.array(sim_state).copy()
-
-dt = 0.01
-
-# --- Reset-Funktion ---
-def reset_simulation():
-    engine.reset()       # Engine zurücksetzen auf Anfangszustand
-    print("Simulation zurückgesetzt!")
-
-p.add_key_event("r", reset_simulation)
-p.add_key_event("R", reset_simulation)
 
 # --- 6. Simulation Schleife ---
-sim_time = 0.0  # simulierte Zeit
+sim_time = [0.0]  # simulierte Zeit
 display_interval = 0.5  # alle 0.5 s GUI-Update für Zeit
-accum_time = 0.0
+accum_time = [0.0]
 
 # Textobjekt für Timer in der Szene erstellen
 
 time_text = p.add_text(f"Simulierte Zeit: 0.00 s", position='lower_right', font_size=14)
 
+# --- Reset-Funktion ---
+def reset_simulation():
+    engine.reset()       # Engine zurücksetzen auf Anfangszustand
+    sim_time[0] = 0.0
+    accum_time[0] = 0.0
+    print("Simulation zurückgesetzt!")
+    
+
+p.add_key_event("r", reset_simulation)
+p.add_key_event("R", reset_simulation)
+
 while True:
-    engine.step(dt)       # Berechnet neue Positionen
-    sim_time += dt
-    accum_time += dt
+    engine.step(params.dt)       # Berechnet neue Positionen
+    sim_time[0] += params.dt
+    accum_time[0] += params.dt
 
     # Positionen der Meshes aktualisieren
     update_plotter(engine.state, plotter_objects)
 
     # Timer nur alle display_interval aktualisieren
-    if accum_time >= display_interval:
+    if accum_time[0] >= display_interval:
         corner = 1  # obere linke Ecke
-        time_text.SetText(corner, f"Simulierte Zeit: {sim_time:.2f} s")
-        accum_time = 0.0
+        time_text.SetText(corner, f"Simulierte Zeit: {sim_time[0]:.2f} s")
+        
+        accum_time[0] = 0.0
+
+    
 
     p.update()
 
     # Beenden, wenn Fenster geschlossen
     if hasattr(p, 'closed') and p.closed:
-        print(f"Simulation beendet bei simulierten {sim_time:.2f} s")
+        print(f"Simulation beendet bei simulierten {sim_time[0]:.2f} s")
         break
