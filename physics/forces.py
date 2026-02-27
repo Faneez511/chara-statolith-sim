@@ -8,7 +8,7 @@ def compute_forces_single(s, params):
     dist_z = params.raumy - abs(z)
     d_wand = max(min(dist_x, dist_y, dist_z), 0)
 
-    f_wand = np.exp(-d_wand / params.lambd)
+    
     eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
     mobility = 1.0 / (6 * np.pi * eta_eff * r) 
 
@@ -21,24 +21,31 @@ def compute_forces_single(s, params):
     g_vec = np.array([gx, gy, gz])
 
     dp = (p_stato - params.p_cyto) * 1e-12
-    F_grav_mag = (4/3) * np.pi * r**3 * dp * params.g_mag
-    v_sed_vec = F_grav_mag * mobility * g_vec 
 
-    v_total = v_sed_vec
+    # --- Gravitation als Vektor ---
+    F_grav = (4/3) * np.pi * r**3 * dp * params.g_mag * g_vec
 
+    # --- Actin-Potential (harmonisch entlang x) ---
     x_mid = 0.5 * (params.ACTIN_MIN_X + params.ACTIN_MAX_X)
     dx = x - x_mid
     k_actin = 1e-14
-    F_actin_x = -k_actin * dx 
+    F_actin = np.array([-k_actin * dx, 0.0, 0.0])
 
-    v_total[0] += F_actin_x * mobility
-
-    # Mittelpunkt der gravisensitiven Zone
+    # --- Zentrale harmonische Falle ---
     center = np.array([32.5, 0.0, 0.0])
-    r_vec = s[0:3] - center
-    F_center_strength = 0.1e-4
-    F_center = -F_center_strength * r_vec
-    v_total += F_center * mobility
+    r_vec = np.array([x, y, z]) - center
+    k_center = 0.1e-4
+    F_center = -k_center * r_vec
+
+    # --- Gesamtkraft ---
+    F_total = F_grav + F_actin + F_center
+
+    # --- Wand-Mobilitätskorrektur ---
+    if d_wand < params.wall_layer_thickness:
+        mobility *= params.wall_mobility_factor
+
+    # --- Driftgeschwindigkeit ---
+    v_total = F_total * mobility
 
     return v_total
 
