@@ -49,7 +49,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     sim_warmup = [np.array(s) for s in temp_data]
 
     dt_warm = 0.05
-    steps = 12000
+    steps = 6000
     g_warm = np.array([1, 0, 0]) * 100 * params.g_mag
     eta_warm = 139e-6
 
@@ -104,19 +104,19 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
         # Update Positionen mit Hard Constraints
         for i in range(len(sim_warmup)):
 
-            # 1 Position updaten
             sim_warmup[i][0:3] += velocities[i] * dt_warm
 
-            # 2 Radius wieder auslesen
-            x, y, z = sim_warmup[i][0:3]
+            x, y, z, r, _ = sim_warmup[i]
 
-            # 3Prüfen ob außerhalb der Ellipse
-            value = (params.LIMIT_X - x/params.LIMIT_X - r)**2 + (y/raumy - r)**2 + (z/raumy - r)**2
+            a = params.LIMIT_X - r
+            b = raumy - r
+            c = raumy - r
+
+            value = (x/a)**2 + (y/b)**2 + (z/c)**2
 
             if value > 1.0:
                 scale = 1.0 / np.sqrt(value)
-
-                sim_warmup[i][0] = params.LIMIT_X - scale*(params.LIMIT_X - x)
+                sim_warmup[i][0] = x * scale
                 sim_warmup[i][1] = y * scale
                 sim_warmup[i][2] = z * scale
             
