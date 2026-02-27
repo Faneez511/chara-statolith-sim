@@ -3,17 +3,13 @@ from physics.forces import compute_forces_single
 from physics.brownian_motion import compute_brownian_motion
 from physics.collisions import compute_collisions
 from physics.constraints import apply_constraints
-from visualization.plotter import initialize_plotter, update_plotter
+
 
 class SimulationEngine:
-    def __init__(self, sim_state, params, plotter_objects = None, ellipsoid = None, innen = None, raumy = None):
+    def __init__(self, sim_state, params):
         self.initial_state = np.array(sim_state).copy()
         self.state = np.array(sim_state).copy()
         self.params = params
-        self.plotter_objects = plotter_objects
-        self.ellipsoid_pos_x = ellipsoid
-        self.innen = innen 
-        self.raumy = raumy
         self.velocities = np.zeros((len(self.state), 3))
         self.current_time = 0.0
 
@@ -53,8 +49,7 @@ class SimulationEngine:
             new_pos = pos + self.velocities[i] * dt
             self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
-        if self.plotter_objects is not None:
-            update_plotter(self.state, self.plotter_objects)
+        
 
         self.current_time += dt
 
@@ -62,6 +57,3 @@ class SimulationEngine:
         self.state[:] = self.initial_state[:]
         self.velocities[:] = 0.0
         self.current_time = 0.0
-
-        if self.plotter_objects is not None:
-            update_plotter(self.state, self.plotter_objects)
