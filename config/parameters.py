@@ -31,14 +31,18 @@ class Parameters:
         # Spring network (Actin coupling)
         
         self.spring_k = 1e-4
-        self.spring_rest = 1.0       # µm – Gleichgewichtsabstand (≈ Partikeldurchmesser)
+        self.spring_rest = 1.5       # µm – Gleichgewichtsabstand (≈ Partikeldurchmesser)
         self.spring_cutoff = 5.0      # µm – maximale Kopplungsreichweite
         
 
 
+        self.wall_layer_thickness = 2.0      # z.B. 2 µm
+        self.wall_mobility_factor = 0.2       # 80% Reduktion
+
+
         #Simulation
 
-        self.dt = 0.01
+        self.dt = 0.03
         self.TIME_SCALE = 100
         self.N = 50                          #Anzahl der Statolithen
 
