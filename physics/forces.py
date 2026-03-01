@@ -5,9 +5,8 @@ def compute_forces_single(s, params):
 
     # --- Wandabstand & effektive Viskosität ---
     dist_x = params.LIMIT_X - x
-    dist_y = params.raumy - abs(y)
-    dist_z = params.raumy - abs(z)
-    d_wand = max(min(dist_x, dist_y, dist_z), 0)
+    dist_radial = params.raumy - np.sqrt(y**2 + z**2)
+    d_wand = max(min(dist_x, dist_radial), 0)
 
     eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
     mobility = 1.0 / (6 * np.pi * eta_eff * r)

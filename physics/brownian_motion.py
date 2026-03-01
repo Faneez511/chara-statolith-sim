@@ -6,9 +6,8 @@ def compute_brownian_motion(s, params):
 
     
     dist_x = params.LIMIT_X - x
-    dist_y = params.raumy - abs(y)
-    dist_z = params.raumy - abs(z)
-    d_wand = max(min(dist_x, dist_y, dist_z), 0)
+    dist_radial = params.raumy - np.sqrt(y**2 + z**2)
+    d_wand = max(min(dist_x, dist_radial), 0)  
 
     f_wand = np.exp(-d_wand / params.lambd)
     eta_eff = params.eta_parallel * (1 + f_wand)
