@@ -15,22 +15,22 @@ class Parameters:
 
         self.ACTIN_DECAY_LENGTH = 5.0        
         self.ACTIN_AXIAL_FORCE = 5e-11
-        self.ACTIN_MAX_FORCE = 3e-4
+        self.ACTIN_MAX_FORCE = 1e-4
         self.ACTIN_LATERAL_FORCE = 2e-11
-        self.FORCE_DAMPING = 10.0
+        
 
         self.g_mag = 9.81e6              #Gravitationskraft
-        self.eta_parallel = 139e-3 * 1e-6 
+        self.eta_parallel = 139e-6
         self.lambd = 5
         self.p_cyto = 1.0139 
-        self.Kb = 1.38 * 1e-23
+        self.Kb = 1.38e-23
         self.Temp = 293
         self.winkel_in_XY = -45
         self.winkel_zu_Z = 0
 
         # Spring network (Actin coupling)
         
-        self.lj_sigma = 1.0    # µm
+        self.lj_sigma = 1.3    # µm
         self.lj_eps = 5e-5     # schwach anziehend
         self.lj_cutoff = 5.0   # µm
                 
