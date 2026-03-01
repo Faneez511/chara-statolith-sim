@@ -37,7 +37,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     while len(temp_data) < N:
         d_part = np.random.uniform(0.5, 2)
         r = d_part / 2
-        dichte = np.random.uniform(4.3, 4.5)
+        dichte = np.random.uniform(4.3, 4.5) #effektive vesikel dichte 1993 braun und sievers
         x = np.random.uniform(r, gen_a - r)
         y = np.random.uniform(-gen_b + r, gen_b - r)
         z = np.random.uniform(-gen_c + r, gen_c - r)
