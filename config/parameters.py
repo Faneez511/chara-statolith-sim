@@ -23,7 +23,7 @@ class Parameters:
         self.eta_parallel = 139e-6
         self.lambd = 5
         self.p_cyto = 1.0139 
-        self.Kb = 1.38e-23
+        self.Kb = 1.38e-23 * 1e12
         self.Temp = 293
         self.winkel_in_XY = -45
         self.winkel_zu_Z = 0

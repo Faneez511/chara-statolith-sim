@@ -62,8 +62,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
             x, y, z, r, dens = s
 
             # Wandabstand & Mobility
-            #d_wand = max(min(params.LIMIT_X - x, raumy - abs(y), raumy - abs(z)), 0)
-            #eta_eff = eta_warm * (1 + np.exp(-d_wand / 5))
+            
             mobility = 1.0 / (6 * np.pi * eta_warm * r)
 
             # Schwerkraft
@@ -77,7 +76,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
                 velocities[i] += np.array([-1.0, 0.0, 0.0]) * f_mag * mobility
 
-            actin_min_warm = 5.0
+            actin_min_warm = params.ACTIN_MIN_X
 
             dist_to_base = x - actin_min_warm
             if 0 < dist_to_base < 3 * params.ACTIN_DECAY_LENGTH:

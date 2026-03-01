@@ -41,7 +41,7 @@ class SimulationEngine:
                 f_mag = 24 * eps * (2 * sr6**2 - sr6) / dist_eff
                 f_mag = np.clip(f_mag, -1e-2, 1e-2)
         
-                f_vec = f_mag * (rij / dist_eff)
+                
                 
                 # Mobility für beide Partikel lokal berechnen
                 ri = self.state[i, 3]
