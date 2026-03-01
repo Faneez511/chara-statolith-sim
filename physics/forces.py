@@ -3,49 +3,55 @@ import numpy as np
 def compute_forces_single(s, params):
     x, y, z, r, p_stato = s
 
-    dist_x = params.LIMIT_X - x 
+    # --- Wandabstand & effektive Viskosität ---
+    dist_x = params.LIMIT_X - x
     dist_y = params.raumy - abs(y)
     dist_z = params.raumy - abs(z)
     d_wand = max(min(dist_x, dist_y, dist_z), 0)
 
-    
     eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
-    mobility = 1.0 / (6 * np.pi * eta_eff * r) 
+    mobility = 1.0 / (6 * np.pi * eta_eff * r)
+    if d_wand < params.wall_layer_thickness:
+        mobility *= params.wall_mobility_factor
 
+    # --- 1. GRAVITATION ---
+    # Quelle: Stokes-Sedimentation, Braun et al. 2002
     winkel1 = np.radians(params.winkel_in_XY)
     winkel2 = np.radians(params.winkel_zu_Z)
-
     gx = np.cos(winkel2) * np.cos(winkel1)
     gy = np.cos(winkel2) * np.sin(winkel1)
     gz = np.sin(winkel2)
     g_vec = np.array([gx, gy, gz])
-
     dp = (p_stato - params.p_cyto) * 1e-12
-
-    # --- Gravitation als Vektor ---
     F_grav = (4/3) * np.pi * r**3 * dp * params.g_mag * g_vec
 
-    # --- Actin-Potential (harmonisch entlang x) ---
-    x_mid = 0.5 * (params.ACTIN_MIN_X + params.ACTIN_MAX_X)
-    dx = x - x_mid
-    k_actin = 1e-14
-    F_actin = np.array([-k_actin * dx, 0.0, 0.0])
+    # --- 2. ACTIN AXIAL (apikal + basal) ---
+    # Exponentieller Käfig: hält Statolithen zwischen ACTIN_MIN_X und ACTIN_MAX_X
+    # Quelle: Volkmann et al. 1999 - subapikale Actin-Zone
+    F_actin = np.array([0.0, 0.0, 0.0])
 
-    # --- Zentrale harmonische Falle ---
-    center = np.array([32.5, 0.0, 0.0])
-    r_vec = np.array([x, y, z]) - center
-    k_center = 0.1e-4
-    F_center = -k_center * r_vec
+    dist_to_apex = params.ACTIN_MAX_X - x
+    if dist_to_apex < 3 * params.ACTIN_DECAY_LENGTH:
+        f_mag = params.ACTIN_MAX_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
+        F_actin[0] -= f_mag  # weg von Apex
 
-    # --- Gesamtkraft ---
-    F_total = F_grav + F_actin + F_center
+    dist_to_base = x - params.ACTIN_MIN_X
+    if dist_to_base < 3 * params.ACTIN_DECAY_LENGTH:
+        f_mag = params.ACTIN_MAX_FORCE * np.exp(-dist_to_base / params.ACTIN_DECAY_LENGTH)
+        F_actin[0] += f_mag  # weg von Basis
 
-    # --- Wand-Mobilitätskorrektur ---
-    if d_wand < params.wall_layer_thickness:
-        mobility *= params.wall_mobility_factor
+    # --- 3. ACTIN LATERAL ---
+    # Hält Statolithen von Zellwand weg (nicht zur Achse hin!)
+    # Quelle: Braun & Wasteneys 1998 - kortikales Actin
+    r_dist = np.sqrt(y**2 + z**2)
+    dist_to_wall = params.raumy - r_dist
+    F_lateral = np.array([0.0, 0.0, 0.0])
+    if dist_to_wall < params.ACTIN_DECAY_LENGTH and r_dist > 0.1:
+        f_lat = params.ACTIN_LATERAL_FORCE * np.exp(-dist_to_wall / params.ACTIN_DECAY_LENGTH)
+        F_lateral[1] = -f_lat * (y / r_dist)
+        F_lateral[2] = -f_lat * (z / r_dist)
 
-    # --- Driftgeschwindigkeit ---
-    v_total = F_total * mobility
+    # --- GESAMTKRAFT ---
+    F_total = F_grav + F_actin + F_lateral
 
-    return v_total
-
+    return F_total * mobility
