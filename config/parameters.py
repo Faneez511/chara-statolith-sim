@@ -16,7 +16,7 @@ class Parameters:
         self.ACTIN_DECAY_LENGTH = 5.0        
         self.ACTIN_AXIAL_FORCE = 5e-11
         self.ACTIN_MAX_FORCE = 1e-4
-        self.ACTIN_LATERAL_FORCE = 2e-11
+        self.ACTIN_LATERAL_FORCE = 0.5e-4
         
 
         self.g_mag = 9.81e6              #Gravitationskraft

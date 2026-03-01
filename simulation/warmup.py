@@ -38,7 +38,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
         d_part = np.random.uniform(0.5, 2)
         r = d_part / 2
         dichte = np.random.uniform(4.3, 4.5) #effektive vesikel dichte 1993 braun und sievers
-        x = np.random.uniform(r, gen_a - r)
+        x = np.random.uniform(max(r, params.ACTIN_MIN_X + r), gen_a - r)
         y = np.random.uniform(-gen_b + r, gen_b - r)
         z = np.random.uniform(-gen_c + r, gen_c - r)
         if (x/gen_a)**2 + (y/gen_b)**2 + (z/gen_c)**2 <= 1.0:
@@ -73,14 +73,14 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
             
             dist_to_apex = params.ACTIN_MAX_X - x
             if 0 < dist_to_apex < 3 * params.ACTIN_DECAY_LENGTH:
-                f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
+                f_mag = params.ACTIN_MAX_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
                 velocities[i] += np.array([-1.0, 0.0, 0.0]) * f_mag * mobility
 
             actin_min_warm = params.ACTIN_MIN_X
 
             dist_to_base = x - actin_min_warm
             if 0 < dist_to_base < 3 * params.ACTIN_DECAY_LENGTH:
-                f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_base / params.ACTIN_DECAY_LENGTH)
+                f_mag = params.ACTIN_MAX_FORCE * np.exp(-dist_to_base / params.ACTIN_DECAY_LENGTH)
                 velocities[i] += np.array([1.0, 0.0, 0.0]) * f_mag * mobility
 
             r_dist = np.sqrt(y**2 + z**2)
@@ -139,8 +139,8 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 ri, rj = sim_warmup[i][3], sim_warmup[j][3]
                 mob_i = 1.0 / (6 * np.pi * params.eta_parallel * ri)
                 mob_j = 1.0 / (6 * np.pi * params.eta_parallel * rj)
-                sim_warmup[i][0:3] += f_vec * mob_i * dt_warm
-                sim_warmup[j][0:3] -= f_vec * mob_j * dt_warm
+                sim_warmup[i][0:3] -= f_vec * mob_i * dt_warm
+                sim_warmup[j][0:3] += f_vec * mob_j * dt_warm
 
     # Nach dem LJ-Loop, vor np.save():
     print("Finale Constraints anwenden...")

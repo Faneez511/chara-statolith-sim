@@ -57,8 +57,6 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
         current_sim_time[0] = 0.0
         print("Simulation reset!")
 
-    p.add_key_event("r", reset_simulation)
-    p.add_key_event("R", reset_simulation)
 
     p.show(interactive_update=True)
 
