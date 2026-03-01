@@ -18,35 +18,47 @@ class SimulationEngine:
 
         for i, s in enumerate(self.state):
             self.velocities[i] += compute_forces_single(s, self.params)
-            self.velocities[i] += compute_brownian_motion(s, self.params)
-
-        v_corr = compute_collisions(self.state, self.params)
-        self.velocities += v_corr
+            
 
         # NEUER SPRING-KOPPLUNGSBLOCK
         N = len(self.state)
 
+        # In engine.py, Spring-Block ersetzen durch:
         for i in range(N):
             for j in range(i + 1, N):
-
                 rij = self.state[j, 0:3] - self.state[i, 0:3]
                 dist = np.linalg.norm(rij)
+                
+                if dist < 1e-10 or dist > self.params.lj_cutoff:
+                    continue
+                
+                # Lennard-Jones: anziehed bei mittlerer Distanz, abstoßend bei Kontakt
+                sig = self.params.lj_sigma  # ~1.5 µm (Partikeldurchmesser)
+                eps = self.params.lj_eps    # Stärke der Anziehung
 
-                if dist == 0:
-                    continue  # Sicherheitscheck gegen Division durch 0
-
-                if dist < self.params.spring_cutoff:
-
-                    spring_dir = rij / dist
-                    spring_force = -self.params.spring_k * (dist - self.params.spring_rest)
-
-                    self.velocities[i] += spring_force * spring_dir
-                    self.velocities[j] -= spring_force * spring_dir
+                dist_eff = max(dist, 0.8 * sig)
+                
+                sr6 = (sig / dist_eff) ** 6
+                f_mag = 24 * eps * (2 * sr6**2 - sr6) / dist_eff
+                f_mag = np.clip(f_mag, -1e-2, 1e-2)
+        
+                f_vec = f_mag * (rij / dist)
+                
+                # Mobility für beide Partikel lokal berechnen
+                ri = self.state[i, 3]
+                rj = self.state[j, 3]
+                mob_i = 1.0 / (6 * np.pi * self.params.eta_parallel * ri)
+                mob_j = 1.0 / (6 * np.pi * self.params.eta_parallel * rj)
+                
+                f_vec = f_mag * (rij / dist)
+                self.velocities[i] -= f_vec * mob_i
+                self.velocities[j] += f_vec * mob_j
 
         for i, s in enumerate(self.state):
             r = s[3]
             pos = s[0:3]
             new_pos = pos + self.velocities[i] * dt
+            new_pos += compute_brownian_motion(s, self.params)
             self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
         
