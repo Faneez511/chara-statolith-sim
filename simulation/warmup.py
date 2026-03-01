@@ -77,7 +77,9 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_apex / params.ACTIN_DECAY_LENGTH)
                 velocities[i] += np.array([-1.0, 0.0, 0.0]) * f_mag * mobility
 
-            dist_to_base = x - params.ACTIN_MIN_X
+            actin_min_warm = 5.0
+
+            dist_to_base = x - actin_min_warm
             if 0 < dist_to_base < 3 * params.ACTIN_DECAY_LENGTH:
                 f_mag = params.ACTIN_AXIAL_FORCE * np.exp(-dist_to_base / params.ACTIN_DECAY_LENGTH)
                 velocities[i] += np.array([1.0, 0.0, 0.0]) * f_mag * mobility
@@ -120,6 +122,40 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 sim_warmup[i][1] = y * scale
                 sim_warmup[i][2] = z * scale
             
+        
+    # Nach dem Warmup-Loop, vor np.save():
+    print("LJ-Equilibrierung...")
+    for _ in range(500):
+        for i in range(len(sim_warmup)):
+            for j in range(i+1, len(sim_warmup)):
+                rij = sim_warmup[j][0:3] - sim_warmup[i][0:3]
+                dist = np.linalg.norm(rij)
+                if dist < 1e-10 or dist > params.lj_cutoff:
+                    continue
+                dist_eff = max(dist, 0.8 * params.lj_sigma)
+                sr6 = (params.lj_sigma / dist_eff) ** 6
+                f_mag = 24 * params.lj_eps * (2 * sr6**2 - sr6) / dist_eff
+                f_mag = np.clip(f_mag, -1e-3, 1e-3)
+                f_vec = f_mag * (rij / dist)
+                ri, rj = sim_warmup[i][3], sim_warmup[j][3]
+                mob_i = 1.0 / (6 * np.pi * params.eta_parallel * ri)
+                mob_j = 1.0 / (6 * np.pi * params.eta_parallel * rj)
+                sim_warmup[i][0:3] += f_vec * mob_i * dt_warm
+                sim_warmup[j][0:3] -= f_vec * mob_j * dt_warm
+
+    # Nach dem LJ-Loop, vor np.save():
+    print("Finale Constraints anwenden...")
+    for i in range(len(sim_warmup)):
+        x, y, z, r, _ = sim_warmup[i]
+        a = params.LIMIT_X - r
+        b = raumy - r
+        c = raumy - r
+        value = (x/a)**2 + (y/b)**2 + (z/c)**2
+        if value > 1.0:
+            scale = 1.0 / np.sqrt(value)
+            sim_warmup[i][0] *= scale
+            sim_warmup[i][1] *= scale
+            sim_warmup[i][2] *= scale
 
     print("Sedimentierung abgeschlossen. Speichere Zustand.")
     final_data = [list(s) for s in sim_warmup]
