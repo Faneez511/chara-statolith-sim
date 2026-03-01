@@ -15,12 +15,12 @@ class Parameters:
 
         self.ACTIN_DECAY_LENGTH = 5.0        
         self.ACTIN_AXIAL_FORCE = 5e-11
-        self.ACTIN_MAX_FORCE = 1e-10
+        self.ACTIN_MAX_FORCE = 3e-4
         self.ACTIN_LATERAL_FORCE = 2e-11
         self.FORCE_DAMPING = 10.0
 
         self.g_mag = 9.81e6              #Gravitationskraft
-        self.eta_parallel = 139 * 1e-6 
+        self.eta_parallel = 139e-3 * 1e-6 
         self.lambd = 5
         self.p_cyto = 1.0139 
         self.Kb = 1.38 * 1e-23
