@@ -15,7 +15,7 @@ class Parameters:
 
         self.ACTIN_DECAY_LENGTH = 5.0        
         self.ACTIN_AXIAL_FORCE = 5e-11
-        self.ACTIN_MAX_FORCE = 5e-11
+        self.ACTIN_MAX_FORCE = 1e-10
         self.ACTIN_LATERAL_FORCE = 2e-11
         self.FORCE_DAMPING = 10.0
 
@@ -30,10 +30,10 @@ class Parameters:
 
         # Spring network (Actin coupling)
         
-        self.spring_k = 1e-4
-        self.spring_rest = 1.5       # µm – Gleichgewichtsabstand (≈ Partikeldurchmesser)
-        self.spring_cutoff = 5.0      # µm – maximale Kopplungsreichweite
-        
+        self.lj_sigma = 1.0    # µm
+        self.lj_eps = 5e-5     # schwach anziehend
+        self.lj_cutoff = 5.0   # µm
+                
 
 
         self.wall_layer_thickness = 2.0      # z.B. 2 µm
@@ -42,8 +42,8 @@ class Parameters:
 
         #Simulation
 
-        self.dt = 0.03
+        self.dt = 0.05
         self.TIME_SCALE = 100
-        self.N = 50                          #Anzahl der Statolithen
+        self.N = 100                          #Anzahl der Statolithen
 
 
