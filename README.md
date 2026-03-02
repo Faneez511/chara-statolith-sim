@@ -19,9 +19,6 @@ Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Net
 
 Das vorliegende Programm bildet einen In-Silico Digital Twin der Chara-Rhizoid-Zellspitze ab. Die Simulation dient der qualitativen Vorhersage der resultierenden Wachstumsrichtung in Abhängigkeit des Gravitationswinkels. Durch die Variation von Parametern wie Zelldurchmesser, Statolithenanzahl, Mediumviskosität und Kraftkonstanten lassen sich theoretische Vorhersagen treffen, die als Grundlage für Laborexperimente dienen. Da Chara-Rhizoide eine zentrale Rolle in der Weltraumforschung (Mikrogravitation) spielen, kann dieses Modell als wertvolles Werkzeug zur ersten Hypothesenvalidierung eingesetzt werden.
 
-📝 HIER SCHREIBEN: Erkläre in 3-4 Sätzen, was dieses Projekt ist. Warum simulieren wir Chara-Rhizoide? Erwähne kurz, dass das Ziel ist, die Bewegung des Statolithen-Komplexes für Experimente am Klinostaten oder im Weltraum (Schwerelosigkeit) vorherzusagen.]
-
-
 ## 🔬 Biophysikalisches Modell
 
 Dieses Projekt übersetzt die biologischen Mechanismen der Zelle in ein stochastisches physikalisches Modell.
@@ -31,7 +28,9 @@ Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma) bei extrem nie
 
 $$\vec{P}_{neu} = \vec{P}_{alt} + (\vec{F}_{grav} + \vec{F}_{actin}) \cdot \mu \cdot \Delta t + \sqrt{2 \cdot D \cdot \Delta t} \cdot \vec{\mathcal{N}}(0, 1)$$
 
-[📝 HIER SCHREIBEN: Erkläre kurz in 1-2 Sätzen, dass der erste Teil die deterministische Drift (Schwerkraft & Aktin) ist und der zweite Teil die Brownsche Bewegung darstellt, welche durch das Fluktuations-Dissipations-Theorem mit der Reibung gekoppelt ist.]
+Der erste Teil der Gleichung beschreibt die deterministische Drift der Statolithen, resultierend aus der effektiven Gewichtskraft und der Rückhaltekraft des Aktin-Netzwerks.
+
+Der zweite Teil repräsentiert die Brownsche Molekularbewegung. Die Berücksichtigung dieser stochastischen Komponente ist in µm-Maßstäben essenziell, da sie den Statolithen-Komplex "fluid" hält. Dies verhindert, dass sich die Partikel in einem starren Gitterzustand (lokales energetisches Minimum) festsetzen, und ermöglicht die Simulation realistischer, fließender Umlagerungsprozesse, wie sie in der Natur beobachtet werden. Die Kopplung von Diffusion und Reibung erfolgt dabei über die Einstein-Relation (D=μkBT).
 
 ### 2. Das Aktin-Netzwerk (Mean-Field Approximation)
 Anstatt einzelne Filamente zu berechnen, wird das subapikale Aktin-Netzwerk als kontinuierliches, exponentielles Kraftfeld modelliert, das die Plasmamembran schützt:
