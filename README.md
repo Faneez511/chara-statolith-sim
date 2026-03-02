@@ -13,7 +13,7 @@
 
 ## 📖 Abstract / Projektübersicht
 
-Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Seit Jahren dient die Alge Chara als Modellorganismus der gravitropischen Forschung, wobei speziell die einzigartigen Eigenschaften ihrer Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt in Chara-Rhizoiden über die Sedimentationsbewegung von Statolithen. Diese bestehen aus vesikelumschlossenen BaSO4
+Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Seit Jahren dient die Alge Chara als Modellorganismus der gravitropischen Forschung, wobei speziell die einzigartigen Eigenschaften ihrer Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt in Chara-Rhizoiden über die Sedimentationsbewegung von Statolithen. Diese bestehen aus vesikelumschlossenen $\text{BaSO}_4$
  -Kristallen mit einer Dichte von 4,3−4,5 $\text{g/cm}^3$
 Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Netzwerks aufgespannt. Zu jedem Zeitpunkt unterliegen sie einem dynamischen Kräftegleichgewicht aus Gravitation, Auftrieb, Aktinkräften sowie gegenseitiger Interaktion (Lennard-Jones-Potential). Der gemittelte Schwerpunkt des Statolithen-Komplexes richtet sich dabei entropie- und kraftgetrieben nach dem wirkenden Gravitationsvektor aus.
 
