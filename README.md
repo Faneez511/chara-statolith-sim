@@ -44,6 +44,14 @@ Um das emergent beobachtete Verhalten des "Statolithen-Komplexes" zu simulieren,
 
 $$F_{LJ}(r) = \frac{24 \epsilon}{r} \left[ 2 \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^6 \right]$$
 
+Dieses Potential beschreibt die Wechselwirkung zwischen den Statolithen durch zwei Komponenten:
+
+Pauli-ähnliche Abstoßung ($\sim r^{-12}$ ): Verhindert das physikalisch unmögliche Ineinanderdringen (Überlappen) der Statolithen.
+
+Attraktive Kopplung ($\sim r^{-6}$ ): Simuliert die elastischen Rückhaltekräfte des feinen Aktin-Geflechts, das die Partikel umgibt.
+
+Durch diese Kopplung bewegen sich die Statolithen nicht als isolierte Einzelpunkte, sondern als kohärenter, fluider Komplex durch die subapikale Zone. Das Modell nutzt diesen Ansatz als effiziente mathematische Annäherung, um das Kollektivverhalten des Komplexes physikalisch korrekt darzustellen, ohne die enorme Rechenlast einzelner Aktinfilamente bewältigen zu müssen.
+
 [📝 HIER SCHREIBEN: Erkläre, dass die Abstoßung ($12$) das Ineinanderdringen verhindert, während die Anziehung ($6$) das feine Aktin-Geflecht simuliert, das die Statolithen als Gruppe zusammenhält.]
 
 
