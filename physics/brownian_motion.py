@@ -12,8 +12,11 @@ def compute_brownian_motion(s, params):
     f_wand = np.exp(-d_wand / params.lambd)
     eta_eff = params.eta_parallel * (1 + f_wand)
 
+    wall_effect = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand / (params.wall_layer_thickness / 3.0))
+    mobility_factor = (1.0 - wall_effect)
+
     
-    D = params.Kb * params.Temp / (6 * np.pi * eta_eff * r)
+    D = params.Kb * params.Temp / (6 * np.pi * eta_eff * r) * mobility_factor
 
     
     noise_vec = np.sqrt(2 * D * params.dt) * np.random.normal(0, 1, 3)
