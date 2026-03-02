@@ -10,8 +10,10 @@ def compute_forces_single(s, params):
 
     eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
     mobility = 1.0 / (6 * np.pi * eta_eff * r)
-    if d_wand < params.wall_layer_thickness:
-        mobility *= params.wall_mobility_factor
+    
+    # Weicher, exponentieller Übergang für die Wandreibung (keine harte Kante!)
+    wall_effect = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand / (params.wall_layer_thickness / 3.0))
+    mobility *= (1.0 - wall_effect)
 
     # --- 1. GRAVITATION ---
     # Quelle: Stokes-Sedimentation, Braun et al. 2002

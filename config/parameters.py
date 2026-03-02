@@ -15,7 +15,7 @@ class Parameters:
 
         self.ACTIN_DECAY_LENGTH = 5.0        
         self.ACTIN_AXIAL_FORCE = 5e-11
-        self.ACTIN_MAX_FORCE = 1e-4
+        self.ACTIN_MAX_FORCE = 2.0e-4
         self.ACTIN_LATERAL_FORCE = 0.5e-4
         
 
@@ -23,7 +23,7 @@ class Parameters:
         self.eta_parallel = 139e-6
         self.lambd = 5
         self.p_cyto = 1.0139 
-        self.Kb = 1.38e-23 * 1e12
+        self.Kb = 1.38e-23 * 1e15
         self.Temp = 293
         self.winkel_in_XY = -45
         self.winkel_zu_Z = 0
@@ -44,6 +44,6 @@ class Parameters:
 
         self.dt = 0.05
         self.TIME_SCALE = 100
-        self.N = 100                          #Anzahl der Statolithen
+        self.N = 50                          #Anzahl der Statolithen
 
 
