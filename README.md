@@ -50,10 +50,9 @@ Pauli-ähnliche Abstoßung ($\sim r^{-12}$ ): Verhindert das physikalisch unmög
 
 Attraktive Kopplung ($\sim r^{-6}$ ): Simuliert die elastischen Rückhaltekräfte des feinen Aktin-Geflechts, das die Partikel umgibt.
 
+Die Kopplung erfolgt über die aus dem Lennard-Jones-Potential abgeleitete Kraftfunktion (Vorfaktor 24ϵ durch Ableitung des Potentials), um eine direkte Integration in die Bewegungsgleichung zu ermöglichen.
+
 Durch diese Kopplung bewegen sich die Statolithen nicht als isolierte Einzelpunkte, sondern als kohärenter, fluider Komplex durch die subapikale Zone. Das Modell nutzt diesen Ansatz als effiziente mathematische Annäherung, um das Kollektivverhalten des Komplexes physikalisch korrekt darzustellen, ohne die enorme Rechenlast einzelner Aktinfilamente bewältigen zu müssen.
-
-[📝 HIER SCHREIBEN: Erkläre, dass die Abstoßung ($12$) das Ineinanderdringen verhindert, während die Anziehung ($6$) das feine Aktin-Geflecht simuliert, das die Statolithen als Gruppe zusammenhält.]
-
 
 ## 💻 Software-Architektur
 
