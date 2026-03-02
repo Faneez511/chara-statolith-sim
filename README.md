@@ -37,7 +37,7 @@ Anstatt einzelne Filamente zu berechnen, wird das subapikale Aktin-Netzwerk als 
 
 $$\vec{F}_{actin} = -F_{max} \cdot \exp\left(-\frac{d_{apex}}{\lambda_{actin}}\right) \cdot \vec{e}_x$$
 
-[📝 HIER SCHREIBEN: Erkläre kurz, was das bedeutet. Warum steigt die Kraft exponentiell an, je näher der Statolith der Spitze kommt?]
+Gemäß der Literatur (z. B. Braun et al.) nimmt die Dichte des Aktin-Netzwerks zur Zellspitze hin massiv zu. Durch die Mean-Field-Approximation in Verbindung mit einem exponentiellen Kraftmodell lässt sich diese Dichtesteigerung effizient abbilden. Dieser Mechanismus fungiert als "biophysikalisches Pufferkissen": Er stellt sicher, dass die schweren Statolithen niemals die sensitive Plasmamembran der Rhizoid-Spitze berühren. Dadurch wird eine mechanische Beeinträchtigung der Exozytose-Vorgänge verhindert, was das ungehindert fortschreitende Spitzenwachstum der Zelle ermöglicht.
 
 ### 3. Statolithen-Kopplung (Lennard-Jones-Potential)
 Um das emergent beobachtete Verhalten des "Statolithen-Komplexes" zu simulieren, sind die Partikel über ein Lennard-Jones-Potential gekoppelt:
