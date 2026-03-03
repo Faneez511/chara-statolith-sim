@@ -1,69 +1,121 @@
 # 🌿 In-Silico Statolith Simulation in Chara Rhizoids
 
-![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 ![PyVista](https://img.shields.io/badge/3D_Rendering-PyVista-green.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/Status-Development-orange)
 
 > **Ein biophysikalischer Digital Twin zur Simulation der Graviperzeption in Pflanzenzellen.**
 
 ![Simulation Screenshot](docs/screenshot.png)
-*(Tipp: Mache später einen schönen Screenshot deiner Simulation, nenne ihn `screenshot.png`, packe ihn in einen Ordner namens `docs` und er wird hier automatisch angezeigt!)*
+*(Hinweis: Diese Simulation modelliert die Dynamik von Statolithen (Schweresinnesorganellen) unter Einflüssen von Gravitation, Zytoplasma-Strömung und Aktin-Netzwerk.)*
 
 ---
 
-## 📖 Abstract / Projektübersicht
+## 📖 Abstract / Wissenschaftlicher Hintergrund
 
-Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Seit Jahren dient die Alge Chara als Modellorganismus der gravitropischen Forschung, wobei speziell die einzigartigen Eigenschaften ihrer Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt in Chara-Rhizoiden über die Sedimentationsbewegung von Statolithen. Diese bestehen aus vesikelumschlossenen $\text{BaSO}_4$
- -Kristallen mit einer Dichte von 4,3−4,5 $\text{g/cm}^3$
-Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Netzwerks aufgespannt. Zu jedem Zeitpunkt unterliegen sie einem dynamischen Kräftegleichgewicht aus Gravitation, Auftrieb, Aktinkräften sowie gegenseitiger Interaktion (Lennard-Jones-Potential). Der gemittelte Schwerpunkt des Statolithen-Komplexes richtet sich dabei entropie- und kraftgetrieben nach dem wirkenden Gravitationsvektor aus.
+Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Die Alge *Chara* dient als Modellorganismus, wobei speziell die Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt über die Sedimentation von **Statolithen**. Diese bestehen aus vesikelumschlossenen $\text{BaSO}_4$-Kristallen (Dichte $\approx 4.4 \text{g/cm}^3$).
 
-Das vorliegende Programm bildet einen In-Silico Digital Twin der Chara-Rhizoid-Zellspitze ab. Die Simulation dient der qualitativen Vorhersage der resultierenden Wachstumsrichtung in Abhängigkeit des Gravitationswinkels. Durch die Variation von Parametern wie Zelldurchmesser, Statolithenanzahl, Mediumviskosität und Kraftkonstanten lassen sich theoretische Vorhersagen treffen, die als Grundlage für Laborexperimente dienen. Da Chara-Rhizoide eine zentrale Rolle in der Weltraumforschung (Mikrogravitation) spielen, kann dieses Modell als wertvolles Werkzeug zur ersten Hypothesenvalidierung eingesetzt werden.
+Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Netzwerks aufgespannt. Zu jedem Zeitpunkt unterliegen sie einem dynamischen Kräftegleichgewicht:
+1.  **Gravitation & Auftrieb** (Sedimentation nach dem Stokes'schen Gesetz)
+2.  **Aktin-Kräfte** (Rückhaltekraft, modelliert als elastisches "Pufferkissen")
+3.  **Inter-Partikel-Kräfte** (Kollisionen und Aggregation via Lennard-Jones-Potential)
+4.  **Thermische Fluktuation** (Brownsche Bewegung)
 
-## 🔬 Biophysikalisches Modell
+Das vorliegende Programm ist ein **In-Silico Digital Twin** der Chara-Rhizoid-Zellspitze. Es dient der qualitativen Vorhersage der Statolithen-Verteilung und Validierung biophysikalischer Hypothesen (z.B. zum Verhalten unter Mikrogravitation).
 
-Dieses Projekt übersetzt die biologischen Mechanismen der Zelle in ein stochastisches physikalisches Modell.
+---
 
-### 1. Überdämpfte Langevin-Dynamik (Thermische Fluktuation)
-Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma) bei extrem niedrigen Reynolds-Zahlen bewegen, dominiert die Reibung über die Trägheit. Die Position $P$ wird über die Euler-Maruyama-Methode berechnet:
+## 🔬 Physikalisches Modell
 
-$$\vec{P}_{neu} = \vec{P}_{alt} + (\vec{F}_{grav} + \vec{F}_{actin}) \cdot \mu \cdot \Delta t + \sqrt{2 \cdot D \cdot \Delta t} \cdot \vec{\mathcal{N}}(0, 1)$$
+### 1. Überdämpfte Langevin-Dynamik
+Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma, $\eta \approx 0.2 \text{Pa}\cdot\text{s}$) bei niedrigen Reynolds-Zahlen bewegen, dominiert die Reibung. Die Zeitintegration erfolgt über die **Euler-Maruyama-Methode**:
 
-Der erste Teil der Gleichung beschreibt die deterministische Drift der Statolithen, resultierend aus der effektiven Gewichtskraft und der Rückhaltekraft des Aktin-Netzwerks.
+$$\vec{P}_{t+\Delta t} = \vec{P}_{t} + \underbrace{(\vec{F}_{grav} + \vec{F}_{actin} + \vec{F}_{LJ}) \cdot \mu \cdot \Delta t}_{\text{Deterministische Drift}} + \underbrace{\sqrt{2 D \Delta t} \cdot \mathcal{N}(0,1)}_{\text{Stochastische Diffusion}}$$
 
-Der zweite Teil repräsentiert die Brownsche Molekularbewegung. Die Berücksichtigung dieser stochastischen Komponente ist in µm-Maßstäben essenziell, da sie den Statolithen-Komplex "fluid" hält. Dies verhindert, dass sich die Partikel in einem starren Gitterzustand (lokales energetisches Minimum) festsetzen, und ermöglicht die Simulation realistischer, fließender Umlagerungsprozesse, wie sie in der Natur beobachtet werden. Die Kopplung von Diffusion und Reibung erfolgt dabei über die Einstein-Relation (D=μkBT).
+### 2. Aktin-Netzwerk (Mean-Field)
+Das komplexe Aktin-Geflecht wird als kontinuierliches Kraftfeld angenähert. Ein exponentieller Term verhindert, dass die schweren Statolithen die sensitive Spitzenmembran ("Apex") beschädigen:
 
-### 2. Das Aktin-Netzwerk (Mean-Field Approximation)
-Anstatt einzelne Filamente zu berechnen, wird das subapikale Aktin-Netzwerk als kontinuierliches, exponentielles Kraftfeld modelliert, das die Plasmamembran schützt:
+$$\vec{F}_{actin}(x) = -F_{max} \cdot \exp\left(-\frac{\Delta x}{\lambda}\right) \hat{e}_x$$
 
-$$\vec{F}_{actin} = -F_{max} \cdot \exp\left(-\frac{d_{apex}}{\lambda_{actin}}\right) \cdot \vec{e}_x$$
-
-Gemäß der Literatur (z. B. Braun et al.) nimmt die Dichte des Aktin-Netzwerks zur Zellspitze hin massiv zu. Durch die Mean-Field-Approximation in Verbindung mit einem exponentiellen Kraftmodell lässt sich diese Dichtesteigerung effizient abbilden. Dieser Mechanismus fungiert als "biophysikalisches Pufferkissen": Er stellt sicher, dass die schweren Statolithen niemals die sensitive Plasmamembran der Rhizoid-Spitze berühren. Dadurch wird eine mechanische Beeinträchtigung der Exozytose-Vorgänge verhindert, was das ungehindert fortschreitende Spitzenwachstum der Zelle ermöglicht.
-
-### 3. Statolithen-Kopplung (Lennard-Jones-Potential)
-Um das emergent beobachtete Verhalten des "Statolithen-Komplexes" zu simulieren, sind die Partikel über ein Lennard-Jones-Potential gekoppelt:
+### 3. Partikel-Interaktion
+Die Statolithen interagieren über ein modifiziertes **Lennard-Jones-Potential**. Die daraus resultierende Kraft $\vec{F}_{LJ}$, die die Abstoßung (Volumenausschluss) und die schwache Anziehung (Kohäsion) modelliert, berechnet sich zu:
 
 $$F_{LJ}(r) = \frac{24 \epsilon}{r} \left[ 2 \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^6 \right]$$
 
-Dieses Potential beschreibt die Wechselwirkung zwischen den Statolithen durch zwei Komponenten:
+Zusätzlich sorgt ein **Velocity-Clipping**-Algorithmus für numerische Stabilität bei harten Kollisionen, indem er unrealistisch große Sprünge pro Zeitschritt unterbindet.
 
-Pauli-ähnliche Abstoßung ($\sim r^{-12}$ ): Verhindert das physikalisch unmögliche Ineinanderdringen (Überlappen) der Statolithen.
-
-Attraktive Kopplung ($\sim r^{-6}$ ): Simuliert die elastischen Rückhaltekräfte des feinen Aktin-Geflechts, das die Partikel umgibt.
-
-Die Kopplung erfolgt über die aus dem Lennard-Jones-Potential abgeleitete Kraftfunktion (Vorfaktor 24ϵ durch Ableitung des Potentials), um eine direkte Integration in die Bewegungsgleichung zu ermöglichen.
-
-Durch diese Kopplung bewegen sich die Statolithen nicht als isolierte Einzelpunkte, sondern als kohärenter, fluider Komplex durch die subapikale Zone. Das Modell nutzt diesen Ansatz als effiziente mathematische Annäherung, um das Kollektivverhalten des Komplexes physikalisch korrekt darzustellen, ohne die enorme Rechenlast einzelner Aktinfilamente bewältigen zu müssen.
+---
 
 ## 💻 Software-Architektur
 
-[📝 HIER SCHREIBEN: Beschreibe in 2-3 Sätzen, dass du das Projekt modular (MVC-Pattern) aufgebaut hast. Erwähne, dass die Physik-Engine (`simulation/engine.py`) strikt von der PyVista-Visualisierung (`visualization/plotter.py`) getrennt ist und Konstanten zentral verwaltet werden.]
+Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissenschaftliche Logik von der Darstellung zu trennen:
 
+* **`simulation/` (Model):**
+    * `engine.py`: Enthält den Physik-Kern (Integrator).
+    * `warmup.py`: Generiert stabile Anfangszustände durch Vor-Simulation (Sedimentierung).
+* **`physics/` (Logic):**
+    * Modulare Berechnung der Kräfte (`forces.py`), Brownschen Bewegung (`brownian_motion.py`) und geometrischen Constraints (`constraints.py`).
+* **`visualization/` (View):**
+    * Nutzung von **PyVista** (VTK-Wrapper) für performantes 3D-Rendering in Echtzeit.
+* **`config/` (Data):**
+    * Zentrale Verwaltung aller physikalischen Parameter ($g$, $\eta$, $k_B$) in SI-konformen, mikrometer-skalierten Einheiten.
 
-## 🚀 Installation & Ausführung
+---
 
-So startest du die Simulation lokal auf deinem Rechner:
+## 🚀 Installation & Nutzung
 
-1. **Repository klonen**
-```bash
-git clone [https://github.com/](https://github.com/)[DEIN_GITHUB_NAME]/chara-statolith-sim.git
-cd chara-statolith-sim
+### Voraussetzungen
+* Python 3.8 oder höher
+* Empfohlen: Eine virtuelle Umgebung (venv)
+
+### Schritt-für-Schritt
+
+1.  **Repository klonen**
+    ```bash
+    git clone [https://github.com/DEIN_USERNAME/chara-statolith-sim.git](https://github.com/DEIN_USERNAME/chara-statolith-sim.git)
+    cd chara-statolith-sim
+    ```
+
+2.  **Virtuelle Umgebung erstellen (Optional, aber empfohlen)**
+    ```bash
+    python -m venv venv
+    # Windows:
+    .\venv\Scripts\activate
+    # Mac/Linux:
+    source venv/bin/activate
+    ```
+
+3.  **Abhängigkeiten installieren**
+    Das Projekt nutzt `pyvista`, `numpy` und `matplotlib`.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Simulation starten**
+    ```bash
+    python main.py
+    ```
+
+### Steuerung
+* Ein Dialog fragt zu Beginn nach dem Zelldurchmesser (Standard: 15 µm).
+* **3D-Navigation:** Linke Maustaste (Drehen), Rechte Maustaste (Zoom), Shift+Klick (Verschieben).
+* **Tastatur:**
+    * `R`: Simulation zurücksetzen (Reset).
+    * `Q`: Beenden.
+
+---
+
+## 📅 Roadmap / Nächste Schritte
+
+* [x] Implementierung der Langevin-Dynamik & Kollisionen
+* [x] Visualisierung des Zell-Käfigs (PyVista)
+* [x] Numerische Stabilisierung (Velocity Clipping)
+* [ ] **Data-Logger:** Export der Schwerpunkt-Koordinaten (CoM) als CSV
+* [ ] Validierung gegen Literaturdaten (Braun & Sievers)
+* [ ] Qualitativer Vorhersage-Plot zur resultierenden Wachstumsrichtung
+
+---
+
+**Autor:** Faneez Shah Polat  
+*Biotechnologie, 2. Semester, HAW-Hamburg*
