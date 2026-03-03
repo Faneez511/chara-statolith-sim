@@ -1,4 +1,4 @@
-# 🌿 In-Silico Statolith Simulation in Chara Rhizoids
+# In-Silico Statolith Simulation in Chara Rhizoids
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 ![PyVista](https://img.shields.io/badge/3D_Rendering-PyVista-green.svg)
@@ -63,7 +63,7 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 
 ---
 
-## 🚀 Installation & Nutzung
+## Installation & Nutzung
 
 ### Voraussetzungen
 * Python 3.8 oder höher
