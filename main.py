@@ -25,12 +25,12 @@ ellipsoid_pos_x, innen, raumy, mittelpunkt = get_cell_meshes(durchmesser_rhizoid
 params = Parameters()
 params.raumy = mittelpunkt - params.CELL_WALL
 
-# ruft neue get_initial_state Version auf, berücksichtigt jetzt N, Durchmesser, raumy und params
+# ruft neue get_initial_state Version auf
 sim_state = np.array(get_initial_state(params.N, durchmesser_rhizoid, raumy, params))
 
 # --- 4. Plotter initialisieren ---
 plotter_objects = initialize_plotter(sim_state, ellipsoid_pos_x, innen)
-p = plotter_objects['plotter']  # Referenz auf den Plotter
+p = plotter_objects['plotter']
 
 # --- 5. Simulation Engine erstellen ---
 engine = SimulationEngine(sim_state, params)
@@ -47,7 +47,7 @@ time_text = p.add_text(f"Simulierte Zeit: 0.00 s", position='lower_right', font_
 
 # --- Reset-Funktion ---
 def reset_simulation():
-    engine.reset()       # Engine zurücksetzen auf Anfangszustand
+    engine.reset()       
     sim_time[0] = 0.0
     accum_time[0] = 0.0
     print("Simulation zurückgesetzt!")
@@ -57,7 +57,7 @@ p.add_key_event("r", reset_simulation)
 p.add_key_event("R", reset_simulation)
 
 while True:
-    engine.step(params.dt)       # Berechnet neue Positionen
+    engine.step(params.dt)       
     sim_time[0] += params.dt
     accum_time[0] += params.dt
 
