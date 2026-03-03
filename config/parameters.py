@@ -17,6 +17,7 @@ class Parameters:
         self.ACTIN_AXIAL_FORCE = 5e-11
         self.ACTIN_MAX_FORCE = 2.0e-4
         self.ACTIN_LATERAL_FORCE = 0.5e-4
+        self.MAX_STEP = 0.2  # Maximale Verschiebung pro Zeitschritt in µm (Sicherheitsanker!)
         
 
         self.g_mag = 9.81e6              #Gravitationskraft
@@ -30,7 +31,7 @@ class Parameters:
 
         # Spring network (Actin coupling)
         
-        self.lj_sigma = 1.3    # µm
+        self.lj_sigma = 1.5    # µm
         self.lj_eps = 5e-5     # schwach anziehend
         self.lj_cutoff = 5.0   # µm
                 

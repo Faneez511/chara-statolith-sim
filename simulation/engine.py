@@ -22,7 +22,7 @@ class SimulationEngine:
         # NEUER SPRING-KOPPLUNGSBLOCK
         N = len(self.state)
 
-        # In engine.py, Spring-Block ersetzen durch:
+        
         for i in range(N):
             for j in range(i + 1, N):
                 rij = self.state[j, 0:3] - self.state[i, 0:3]
@@ -52,6 +52,21 @@ class SimulationEngine:
                 f_vec = f_mag * (rij / dist)
                 self.velocities[i] -= f_vec * mob_i
                 self.velocities[j] += f_vec * mob_j
+
+        # Verhindert Explosionen bei harten Kollisionen
+        for i in range(len(self.velocities)):
+            v = self.velocities[i]
+            # Betrag der Geschwindigkeit berechnen
+            v_mag = np.linalg.norm(v)
+            
+            # Wie weit würde es fliegen?
+            dist = v_mag * dt
+            
+            if dist > self.params.MAX_STEP:
+                # Skalierungsfaktor berechnen (bremsen!)
+                scale = self.params.MAX_STEP / dist
+                self.velocities[i] *= scale
+
 
         for i, s in enumerate(self.state):
             r = s[3]
