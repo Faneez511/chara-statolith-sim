@@ -16,7 +16,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
 
     # --- Pfad immer relativ zu diesem Script ---
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    # Dateiname hängt jetzt von allen relevanten Parametern ab (N und Durchmesser)
+    
     filename = os.path.join(
         base_dir,
         f"sedimented_state_N{N}_d{durchmesser_rhizoid:.1f}_v2.npy"
@@ -51,7 +51,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     dt_warm = 0.05
     steps = 6000
     g_warm = np.array([1, 0, 0]) * 100 * params.g_mag
-    eta_warm = 139e-6
+    eta_warm = params.eta_parallel
 
     # --- WARM-UP LOOP ---
     for _ in range(steps):
