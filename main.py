@@ -1,5 +1,7 @@
 # main.py
 import os
+import time
+from simulation.logger import DataLogger
 print(f"Aktuelles Arbeitsverzeichnis: {os.getcwd()}")
 
 from ui.input_dialog import get_rhizoid_diameter
@@ -35,6 +37,15 @@ p = plotter_objects['plotter']
 # --- 5. Simulation Engine erstellen ---
 engine = SimulationEngine(sim_state, params)
 
+# Einzigartiger Dateiname mit Zeitstempel
+timestamp = time.strftime("%Y%m%d_%H%M%S")
+log_filename = f"data/sim_{timestamp}.csv"
+
+# Logger instanziieren
+logger = DataLogger(log_filename, params, durchmesser_rhizoid)
+log_interval = 0.1  # Schreibt alle 0.1s Simulationszeit einen Datenpunkt
+next_log_time = 0.0
+print(f"Logger gestartet: {log_filename}")
 
 # --- 6. Simulation Schleife ---
 sim_time = [0.0]  # simulierte Zeit
@@ -60,6 +71,11 @@ while True:
     engine.step(params.dt)       
     sim_time[0] += params.dt
     accum_time[0] += params.dt
+
+    # Daten erfassen
+    if sim_time[0] >= next_log_time:
+        logger.log(sim_time[0], engine.state)
+        next_log_time += log_interval
 
     # Positionen der Meshes aktualisieren
     update_plotter(engine.state, plotter_objects)
