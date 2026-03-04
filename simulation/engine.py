@@ -19,10 +19,8 @@ class SimulationEngine:
             self.velocities[i] += compute_forces_single(s, self.params)
             
 
-        # NEUER SPRING-KOPPLUNGSBLOCK
         N = len(self.state)
 
-        
         for i in range(N):
             for j in range(i + 1, N):
                 rij = self.state[j, 0:3] - self.state[i, 0:3]
@@ -63,7 +61,7 @@ class SimulationEngine:
             dist = v_mag * dt
             
             if dist > self.params.MAX_STEP:
-                # Skalierungsfaktor berechnen (bremsen!)
+                # Skalierungsfaktor berechnen + "bremsen"
                 scale = self.params.MAX_STEP / dist
                 self.velocities[i] *= scale
 
@@ -78,6 +76,25 @@ class SimulationEngine:
         
 
         self.current_time += dt
+
+    # In SimulationEngine Klasse (engine.py)
+
+    def get_current_velocities(self):
+        # Gibt den Mittelwert der aktuellen Geschwindigkeitsvektoren zurück
+        return np.mean(self.velocities, axis=0)
+
+    def get_contact_count(self):
+        # Zählt, wie viele Partikel-Paare sich berühren (Abstand < 1.1 * Durchmesser)
+        count = 0
+        N = len(self.state)
+        threshold = 1.1 * self.params.lj_sigma
+        for i in range(N):
+            for j in range(i + 1, N):
+                dist = np.linalg.norm(self.state[i, 0:3] - self.state[j, 0:3])
+                if dist < threshold:
+                    count += 1
+        return count
+
 
     def reset(self):
         self.state[:] = self.initial_state[:]

@@ -7,7 +7,7 @@ from simulation.engine import SimulationEngine
 from simulation.warmup import get_initial_state
 from simulation.logger import DataLogger
 
-def run_batch(anzahl_runs=100, dauer_pro_run=600.0):
+def run_batch(anzahl_runs=100, dauer_pro_run=2000.0):
     params = Parameters()
     durchmesser = 25.0 # Standardwert
     
@@ -48,10 +48,10 @@ def run_batch(anzahl_runs=100, dauer_pro_run=600.0):
             sim_time += params.dt
             
             if sim_time >= next_log:
-                logger.log(sim_time, engine.state)
+                logger.log(sim_time, engine)
                 next_log += log_interval
                 
         print(f"Run {i} nach {sim_time:.1f}s beendet.")
 
 if __name__ == "__main__":
-    run_batch(anzahl_runs=100, dauer_pro_run=600.0)
+    run_batch(anzahl_runs=100, dauer_pro_run=2000.0)
