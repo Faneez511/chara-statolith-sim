@@ -4,7 +4,7 @@ import time
 import numpy as np
 
 class DataLogger:
-    def __init__(self, filename, params, rhizoid_diameter):
+    def __init__(self, filename, params, rhizoid_diameter, seed):
         self.filename = filename
         
         # Header mit allen wichtigen Metadaten für dein Paper
@@ -13,6 +13,7 @@ class DataLogger:
             f"# Erstellt am: {time.strftime('%d.%m.%Y %H:%M:%S')}",
             f"# --------------------------------------------------",
             f"# PARAMETER:",
+            f"# Seed: {seed}",
             f"# Anzahl Statolithen (N): {params.N}",
             f"# Rhizoid-Durchmesser: {rhizoid_diameter} um",
             f"# Actin Decay Length (lambda): {params.ACTIN_DECAY_LENGTH} um",

@@ -12,6 +12,7 @@ from visualization.plotter import initialize_plotter, update_plotter
 from simulation.engine import SimulationEngine
 import pyvista as pv
 import numpy as np
+import random
 
 # --- 1. Rhizoid-Durchmesser abfragen ---
 durchmesser_rhizoid = get_rhizoid_diameter()
@@ -36,6 +37,12 @@ p = plotter_objects['plotter']
 
 # --- 5. Simulation Engine erstellen ---
 engine = SimulationEngine(sim_state, params)
+
+# --- SEED GENERIEREN ---
+seed = np.random.randint(0, 1000000)
+np.random.seed(seed)
+random.seed(seed)
+print(f"Random Seed für diesen Run: {seed}")
 
 # Einzigartiger Dateiname mit Zeitstempel
 timestamp = time.strftime("%Y%m%d_%H%M%S")

@@ -45,5 +45,6 @@ class Parameters:
         self.dt = 0.05
         self.TIME_SCALE = 100
         self.N = 50                          #Anzahl der Statolithen
+        self.current_seed = None
 
 
