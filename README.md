@@ -71,6 +71,8 @@ Die statistische Auswertung von 100 unabhängigen Simulationsläufen zeigt die S
 
 *Der Plot zeigt die Schwerpunktposition (CoM), die Sinkgeschwindigkeit und die Wolken-Ausdehnung über die Zeit.*
 
+---
+
 ## Installation & Nutzung
 
 ### Voraussetzungen
