@@ -49,7 +49,7 @@ timestamp = time.strftime("%Y%m%d_%H%M%S")
 log_filename = f"data/sim_{timestamp}.csv"
 
 # Logger instanziieren
-logger = DataLogger(log_filename, params, durchmesser_rhizoid)
+logger = DataLogger(log_filename, params, durchmesser_rhizoid, seed)
 log_interval = 0.1  # Schreibt alle 0.1s Simulationszeit einen Datenpunkt
 next_log_time = 0.0
 print(f"Logger gestartet: {log_filename}")
