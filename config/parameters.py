@@ -13,7 +13,7 @@ class Parameters:
 
         #Kräfte/Physik
 
-        self.ACTIN_DECAY_LENGTH = 2.5        
+        self.ACTIN_DECAY_LENGTH = 4.0        
         self.ACTIN_MAX_FORCE = 2.0e-4
         self.ACTIN_LATERAL_FORCE = 0.5e-4
         self.MAX_STEP = 0.2  # Maximale Verschiebung pro Zeitschritt in µm (Sicherheitsanker!)
@@ -31,7 +31,7 @@ class Parameters:
         # Spring network (Actin coupling)
         
         self.lj_sigma = 1.5    # µm
-        self.lj_eps = 2.5e-5     # schwach anziehend
+        self.lj_eps = 1.0e-5     # schwach anziehend
         self.lj_cutoff = 5.0   # µm
                 
 
