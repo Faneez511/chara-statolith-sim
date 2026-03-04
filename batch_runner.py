@@ -9,11 +9,12 @@ from simulation.logger import DataLogger
 
 def run_batch(anzahl_runs=100, dauer_pro_run=600.0):
     params = Parameters()
-    durchmesser = 15.0 # Standardwert
+    durchmesser = 25.0 # Standardwert
     
     # 1. Warmup einmalig holen/erstellen
     mittelpunkt = durchmesser / 2.0
     raumy = mittelpunkt - params.CELL_WALL
+    params.raumy = raumy
     
     print("--- Phase 1: Initialisiere/Lade Warmup ---")
     # Der Warmup-Code nutzt intern seine eigenen Zufallswerte (eigener Seed-Zustand)
