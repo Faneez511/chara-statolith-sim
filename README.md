@@ -67,7 +67,7 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 
 Die statistische Auswertung von 100 unabhängigen Simulationsläufen zeigt die Sedimentationsdynamik der Statolithen unter einer Neigung von -45°:
 
-![Statolithen Analyse Plot](docs/simulation_analysis.png)
+![Statolithen Analyse Plot](docs/simulation_analysis_25um_2000s_V1.png)
 
 *Der Plot zeigt die Schwerpunktposition (CoM), die Sinkgeschwindigkeit und die Wolken-Ausdehnung über die Zeit.*
 
