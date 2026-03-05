@@ -81,7 +81,7 @@ while True:
 
     # Daten erfassen
     if sim_time[0] >= next_log_time:
-        logger.log(sim_time[0], engine.state)
+        logger.log(sim_time[0], engine)
         next_log_time += log_interval
 
     # Positionen der Meshes aktualisieren
