@@ -83,7 +83,7 @@ Die statistische Auswertung von 100 unabhängigen Simulationsläufen zeigt die S
 
 1.  **Repository klonen**
     ```bash
-    git clone [https://github.com/DEIN_USERNAME/chara-statolith-sim.git](https://github.com/DEIN_USERNAME/chara-statolith-sim.git)
+    git clone [https://github.com/Faneez511/chara-statolith-sim.git](https://github.com/Faneez511/chara-statolith-sim.git)
     cd chara-statolith-sim
     ```
 
