@@ -46,7 +46,7 @@ print(f"Random Seed für diesen Run: {seed}")
 
 # Einzigartiger Dateiname mit Zeitstempel
 timestamp = time.strftime("%Y%m%d_%H%M%S")
-log_filename = f"data/sim_{timestamp}.csv"
+log_filename = f"data/main_runs/sim_{timestamp}.csv"
 
 # Logger instanziieren
 logger = DataLogger(log_filename, params, durchmesser_rhizoid, seed)
