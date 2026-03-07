@@ -80,16 +80,6 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 
 ---
 
-## Erste Ergebnisse (Analyse)
-
-Die statistische Auswertung von 100 unabhängigen Simulationsläufen zeigt die Sedimentationsdynamik der Statolithen unter einer Neigung von -45°:
-
-![Statolithen Analyse Plot](docs/simulation_analysis_25um_2000s_v1.png)
-
-*Der Plot zeigt die Schwerpunktposition (CoM), die Sinkgeschwindigkeit und die Wolken-Ausdehnung über die Zeit.*
-
----
-
 ## Installation & Nutzung
 
 ### Voraussetzungen
@@ -139,7 +129,7 @@ Die statistische Auswertung von 100 unabhängigen Simulationsläufen zeigt die S
 * [x] Visualisierung des Zell-Käfigs (PyVista)
 * [x] Numerische Stabilisierung (Velocity Clipping)
 * [x] Data-Logger: Export der Schwerpunkt-Koordinaten (CoM) als CSV
-* [ ] **Validierung gegen Literaturdaten (Braun & Sievers)**
+* [x] **Validierung gegen Literaturdaten (Braun & Sievers)**
 * [ ] Qualitativer Vorhersage-Plot zur resultierenden Wachstumsrichtung
 
 ---
