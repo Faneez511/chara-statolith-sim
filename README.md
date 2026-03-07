@@ -47,6 +47,23 @@ Zusätzlich sorgt ein **Velocity-Clipping**-Algorithmus für numerische Stabilit
 
 ---
 
+## 🔬 Key Results & Visualizations
+
+Das Modell wurde durch einen Simulationslauf (N=100 Runs pro Neigungswinkel, über 12 Millionen Datenpunkte) kalibriert und validiert. Es reproduziert das axiale Sedimentationsverhalten in-vivo exakt:
+
+### 1. Räumliches Gleichgewicht (Residence Time Heatmap)
+Die Simulation zeigt, wie die Statolithenwolke je nach Neigungswinkel der Zelle (0° bis 180°) wandert und stabile Gleichgewichtspositionen zwischen Gravitation und Aktin-Rückstellkräften findet.
+![Residence Time Heatmap](plots_residence_heatmaps/residence_time_heatmap.png)
+
+### 2. Sedimentations-Kinetik auf der Längsachse (X-Achse)
+Die Trajektorien des Schwerpunkts (Center of Mass) zeigen eine konsistente, viskos gedämpfte Kinetik in den Ruhezustand (t = 2000s).
+![Kinetik X-Achse](plots_monster_run_V2/lineplot_com_x.png)
+
+### 3. Statistische Verteilung der Endzustände (Abstand zur Spitze)
+![Boxplot X-Achse](plots_monster_run_V2/boxplot_com_x.png)
+
+---
+
 ## 💻 Software-Architektur
 
 Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissenschaftliche Logik von der Darstellung zu trennen:
