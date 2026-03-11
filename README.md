@@ -14,7 +14,7 @@
 
 ## 📖 Abstract / Wissenschaftlicher Hintergrund
 
-Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Die Alge *Chara* dient als Modellorganismus, wobei speziell die Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt über die Sedimentation von **Statolithen**. Diese bestehen aus vesikelumschlossenen $\text{BaSO}_4$-Kristallen (Dichte $\approx 4.4 \text{g/cm}^3$).
+Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Die Alge *Chara* dient als Modellorganismus, wobei speziell die Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt über die Sedimentation von **Statolithen**. Diese bestehen aus vesikelumschlossenen BaSO4-Kristallen (Dichte $\approx 4.4\,\text{g/cm}^3$).
 
 Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Netzwerks aufgespannt. Zu jedem Zeitpunkt unterliegen sie einem dynamischen Kräftegleichgewicht:
 1.  **Gravitation & Auftrieb** (Sedimentation nach dem Stokes'schen Gesetz)
@@ -22,14 +22,14 @@ Die Statolithen sind in der subapikalen Zone innerhalb eines komplexen Aktin-Net
 3.  **Inter-Partikel-Kräfte** (Kollisionen und Aggregation via Lennard-Jones-Potential)
 4.  **Thermische Fluktuation** (Brownsche Bewegung)
 
-Das vorliegende Programm ist ein **In-Silico Digital Twin** der Chara-Rhizoid-Zellspitze. Es dient der qualitativen Vorhersage der Statolithen-Verteilung und Validierung biophysikalischer Hypothesen (z.B. zum Verhalten unter Mikrogravitation).
+Das vorliegende Programm ist ein **In-Silico Digital Twin** der Chara-Rhizoid-Zellspitze. Es dient der qualitativen und quantitativen Vorhersage der Statolithen-Verteilung und der Validierung biophysikalischer Hypothesen (z.B. zur Passivitäts-Baseline unter Mikrogravitation).
 
 ---
 
 ## 🔬 Physikalisches Modell
 
 ### 1. Überdämpfte Langevin-Dynamik
-Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma, $\eta \approx 0.2 \text{Pa}\cdot\text{s}$) bei niedrigen Reynolds-Zahlen bewegen, dominiert die Reibung. Die Zeitintegration erfolgt über die **Euler-Maruyama-Methode**:
+Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma, $\eta \approx 139\,\text{mPa}\cdot\text{s}$) bei extrem niedrigen Reynolds-Zahlen bewegen, dominiert die Reibung. Die Zeitintegration erfolgt über die **Euler-Maruyama-Methode**:
 
 $$\vec{P}_{t+\Delta t} = \vec{P}_{t} + \underbrace{(\vec{F}_{grav} + \vec{F}_{actin} + \vec{F}_{LJ}) \cdot \mu \cdot \Delta t}_{\text{Deterministische Drift}} + \underbrace{\sqrt{2 D \Delta t} \cdot \mathcal{N}(0,1)}_{\text{Stochastische Diffusion}}$$
 
@@ -39,7 +39,7 @@ Das komplexe Aktin-Geflecht wird als kontinuierliches Kraftfeld angenähert. Ein
 $$\vec{F}_{actin}(x) = -F_{max} \cdot \exp\left(-\frac{\Delta x}{\lambda}\right) \hat{e}_x$$
 
 ### 3. Partikel-Interaktion
-Die Statolithen interagieren über ein modifiziertes **Lennard-Jones-Potential**. Die daraus resultierende Kraft $\vec{F}_{LJ}$, die die Abstoßung (Volumenausschluss) und die schwache Anziehung (Kohäsion) modelliert, berechnet sich zu:
+Die Statolithen interagieren über ein modifiziertes **Lennard-Jones-Potential**. Die daraus resultierende Kraft $\vec{F}_{LJ}$, die die Abstoßung (Volumenausschluss) modelliert, berechnet sich zu:
 
 $$F_{LJ}(r) = \frac{24 \epsilon}{r} \left[ 2 \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^6 \right]$$
 
@@ -49,18 +49,23 @@ Zusätzlich sorgt ein **Velocity-Clipping**-Algorithmus für numerische Stabilit
 
 ## 🔬 Key Results & Visualizations
 
-Das Modell wurde durch einen Simulationslauf (N=100 Runs pro Neigungswinkel, über 12 Millionen Datenpunkte) kalibriert und validiert. Es reproduziert das axiale Sedimentationsverhalten in-vivo exakt:
+Das Modell wurde durch umfangreiche Ensemble-Simulationen (N=100 Runs pro Bedingung, >16 Millionen Datenpunkte) statistisch rigoros kalibriert und validiert. Es liefert hochpräzise Vorhersagen für die passive Statolithen-Dynamik:
 
-### 1. Räumliches Gleichgewicht (Residence Time Heatmap)
-Die Simulation zeigt, wie die Statolithenwolke je nach Neigungswinkel der Zelle (0° bis 180°) wandert und stabile Gleichgewichtspositionen zwischen Gravitation und Aktin-Rückstellkräften findet.
-![Residence Time Heatmap](plots_residence_heatmaps/residence_time_heatmap.png)
+### 1. Sedimentations-Kinetik auf der Längsachse
+Die Trajektorien des Schwerpunkts (Center of Mass, $CoM_x$) zeigen eine konsistente, viskos gedämpfte Kinetik. Die Statolithen fallen in Richtung der Zellspitze und werden durch die exponentielle Gegenkraft des apikalen Aktin-Netzwerks weich abgebremst, bis sie einen stabilen Ruhezustand erreichen.
+![Kinetik X-Achse](docs/lineplot_com_x.png)
 
-### 2. Sedimentations-Kinetik auf der Längsachse (X-Achse)
-Die Trajektorien des Schwerpunkts (Center of Mass) zeigen eine konsistente, viskos gedämpfte Kinetik in den Ruhezustand (t = 2000s).
-![Kinetik X-Achse](plots_monster_run_V2/lineplot_com_x.png)
+### 2. Nachweis des mechanischen Gleichgewichts
+Um zu beweisen, dass die Simulation einen echten, artefaktfreien physikalischen Ruhezustand erreicht, wird die Restgeschwindigkeit analysiert. Der Boxplot der lateralen Endgeschwindigkeit ($v_y$) beweist eine perfekte Konvergenz um den Nullpunkt. Deterministische Kräfte und die stochastische Brownsche Bewegung sind am Ende der Simulation vollständig ausbalanciert.
+![Restgeschwindigkeit Y-Achse](docs/boxplot_velocity_y.png)
 
-### 3. Statistische Verteilung der Endzustände (Abstand zur Spitze)
-![Boxplot X-Achse](plots_monster_run_V2/boxplot_com_x.png)
+### 3. Mikrogravitation (0g) vs. Kontroll-Bedingungen (Die passive Baseline)
+Dieses Panel vergleicht das System unter simulierter Schwerelosigkeit (0g) mit einer Kontrollbedingung (1g ohne Aktin-Käfig). 
+* **Oben (Schwerpunkt-Verschiebung):** Die axiale Verschiebung des Schwerpunkts über die Zeit. Bei 0g wird die Wolke rein passiv durch das Aktin in eine Gleichgewichtsposition im Käfig gedrückt.
+* **Unten (Wolkenausdehnung):** Die Dynamik der Wolkenbreite ($\sigma_x$). Unter 0g komprimiert das elastische Netzwerk die Wolke massiv auf eine minimale Basisbreite. 
+
+*Wissenschaftliche Relevanz:* Diese rein passive Dynamik liefert die erste in-silico Referenz-Baseline (Nullhypothese). Jede Abweichung von diesen vorhergesagten Werten in echten Raumfahrt-Experimenten quantifiziert exakt den Effekt der biologischen Asymmetrie und des aktiven Aktomyosin-Transports.
+![0g Kinetik und Wolkenausdehnung](docs/lineplots_kinetics.png)
 
 ---
 
@@ -104,7 +109,7 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
     ```
 
 3.  **Abhängigkeiten installieren**
-    Das Projekt nutzt `pyvista`, `numpy` und `matplotlib`.
+    Das Projekt nutzt `pyvista`, `numpy`, `pandas`, `seaborn` und `matplotlib`.
     ```bash
     pip install -r requirements.txt
     ```
@@ -129,8 +134,9 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 * [x] Visualisierung des Zell-Käfigs (PyVista)
 * [x] Numerische Stabilisierung (Velocity Clipping)
 * [x] Data-Logger: Export der Schwerpunkt-Koordinaten (CoM) als CSV
-* [x] **Validierung gegen Literaturdaten (Braun & Sievers)**
-* [ ] Qualitativer Vorhersage-Plot zur resultierenden Wachstumsrichtung
+* [x] Rigoroses Batch-Testing (N=100) & Statistik-Pipeline (`master_analysis.py`)
+* [x] **Validierung gegen Primärliteratur (Braun, Limbach, Hauslage)**
+* [ ] Erweiterung des Modells um aktive Myosin-Transport-Vektoren
 
 ---
 
