@@ -5,8 +5,8 @@ class Parameters:
 
         #Zellgeometrie
 
-        self.LIMIT_X = 45.0                  #Begrenzung Subapkiale Zone
-        self.ACTIN_MAX_X = 45.0
+        self.LIMIT_X = 50.0                  #Begrenzung Subapkiale Zone
+        self.ACTIN_MAX_X = 40.0
         self.TIP_POSITION_X = 50.0           #Länge der Zelle in µm
         self.ACTIN_MIN_X = 20.0              #Begrenzung Apikale Zone
         self.CELL_WALL = 1.5
@@ -25,10 +25,10 @@ class Parameters:
         self.p_cyto = 1.0139 
         self.Kb = 1.38e-23 * 1e15
         self.Temp = 293
-        self.winkel_in_XY = -45
+        self.winkel_in_XY = 0
         self.winkel_zu_Z = 0
 
-        # Spring network (Actin coupling)
+
         
         self.lj_sigma = 1.5    # µm
         self.lj_eps = 1.0e-5     # schwach anziehend
