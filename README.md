@@ -12,7 +12,7 @@
 
 ---
 
-## 📖 Abstract / Wissenschaftlicher Hintergrund
+## Abstract / Wissenschaftlicher Hintergrund
 
 Gravitropismus beschreibt die Wachstumsbewegung von Pflanzen in Reaktion auf die Schwerkraft. Die Alge *Chara* dient als Modellorganismus, wobei speziell die Rhizoide zur Untersuchung der Graviperzeption genutzt werden. Die Wahrnehmung der Schwerkraft erfolgt über die Sedimentation von **Statolithen**. Diese bestehen aus vesikelumschlossenen BaSO4-Kristallen (Dichte $\approx 4.4\,\text{g/cm}^3$).
 
@@ -26,7 +26,7 @@ Das vorliegende Programm ist ein **In-Silico Digital Twin** der Chara-Rhizoid-Ze
 
 ---
 
-## 🔬 Physikalisches Modell
+## Physikalisches Modell
 
 ### 1. Überdämpfte Langevin-Dynamik
 Da sich die Statolithen in einem hochviskosen Medium (Zytoplasma, $\eta \approx 139\,\text{mPa}\cdot\text{s}$) bei extrem niedrigen Reynolds-Zahlen bewegen, dominiert die Reibung. Die Zeitintegration erfolgt über die **Euler-Maruyama-Methode**:
@@ -47,7 +47,7 @@ Zusätzlich sorgt ein **Velocity-Clipping**-Algorithmus für numerische Stabilit
 
 ---
 
-## 🔬 Key Results & Visualizations
+##  Key Results & Visualizations
 
 Das Modell wurde durch umfangreiche Ensemble-Simulationen (N=100 Runs pro Bedingung, >16 Millionen Datenpunkte) statistisch rigoros kalibriert und validiert. Es liefert hochpräzise Vorhersagen für die passive Statolithen-Dynamik:
 
@@ -69,7 +69,7 @@ Dieses Panel vergleicht das System unter simulierter Schwerelosigkeit (0g) mit e
 
 ---
 
-## 💻 Software-Architektur
+## Software-Architektur
 
 Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissenschaftliche Logik von der Darstellung zu trennen:
 
@@ -128,7 +128,7 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 
 ---
 
-## 📅 Roadmap / Nächste Schritte
+## Roadmap / Nächste Schritte
 
 * [x] Implementierung der Langevin-Dynamik & Kollisionen
 * [x] Visualisierung des Zell-Käfigs (PyVista)
