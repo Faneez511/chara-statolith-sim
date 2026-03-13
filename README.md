@@ -54,7 +54,7 @@ Das Modell wurde durch umfangreiche Ensemble-Simulationen (N=100 Runs pro Beding
 ### 1. Modell-Validierung: Sedimentation und mechanisches Gleichgewicht
 Um zu beweisen, dass die Simulation einen echten, artefaktfreien physikalischen Ruhezustand erreicht, wurde die axiale Kinetik (X-Achse) analysiert.
 * **Oben (Schwerpunkt-Verschiebung):** Die Trajektorien des Schwerpunkts ($CoM_x$) zeigen eine konsistente, viskos gedämpfte Kinetik. Die Statolithen fallen in Richtung der Zellspitze und werden durch die exponentielle Gegenkraft des apikalen Aktin-Netzwerks weich abgebremst.
-![Kinetik X-Achse](docs/lineplot_com_x.png)
+![Kinetik X-Achse](docs/boxplot_com_x.png)
 * **Unten (Restgeschwindigkeit):** Die Geschwindigkeit des Schwerpunkts auf der X-Achse ($v_x$) konvergiert am Ende der Simulation perfekt gegen null. Dies beweist, dass deterministische Kräfte (Gravitation, Aktin-Käfig) und stochastische thermische Fluktuationen (Brownsche Bewegung) am Ende der Simulation vollständig ausbalanciert sind.
 ![Geschwindigkeit X-Achse](docs/boxplot_velocity_x.png)
 
