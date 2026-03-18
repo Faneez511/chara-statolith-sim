@@ -47,7 +47,7 @@ Zusätzlich sorgt ein **Velocity-Clipping**-Algorithmus für numerische Stabilit
 
 ---
 
-## 🔬 Key Results & Scientific Discoveries
+## Key Results & Scientific Discoveries
 
 Das Modell wurde durch umfangreiche Ensemble-Simulationen (N=100 Runs pro Bedingung, 6 Gravitationswinkel, >16 Millionen Datenpunkte) statistisch rigoros kalibriert. Die Auswertung liefert nicht nur hochpräzise Vorhersagen für die passive Statolithen-Dynamik, sondern auch zwei fundamentale wissenschaftliche Erkenntnisse.
 

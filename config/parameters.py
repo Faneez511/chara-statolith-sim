@@ -19,7 +19,7 @@ class Parameters:
         self.MAX_STEP = 0.2  # Maximale Verschiebung pro Zeitschritt in µm (Sicherheitsanker!)
         
 
-        self.g_mag = 9.81e6              #Gravitationskraft
+        self.g_mag = 9.81e6             #Gravitationskraft
         self.eta_parallel = 139e-6
         self.lambd = 5
         self.p_cyto = 1.0139 
