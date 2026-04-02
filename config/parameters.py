@@ -25,7 +25,7 @@ class Parameters:
         self.g_mag = 9.81e6             #Gravitationskraft
         self.eta_parallel = 139e-6
         self.lambd = 5
-        self.p_cyto = 1.0139
+        self.p_cyto = 1.0139 * 1e-12
         self.Kb = 1.38e-23 * 1e15
         self.Temp = 293
         self.winkel_in_XY = -90

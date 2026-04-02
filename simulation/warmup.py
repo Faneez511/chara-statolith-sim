@@ -49,6 +49,7 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
         d_part = np.random.uniform(0.5, 2)
         r = d_part / 2
         dichte = np.random.uniform(4.3, 4.5) # effektive vesikel dichte 1993 braun und sievers
+        dichte = dichte * 1e-12
         
         # X-Position sicher im Subapikalen Bereich generieren
         x = np.random.uniform(max(r, params.ACTIN_MIN_X + r), gen_a - r)

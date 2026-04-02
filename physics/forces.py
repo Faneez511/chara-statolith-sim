@@ -34,7 +34,7 @@ def compute_forces_single(s, params):
     gy = np.cos(winkel2) * np.sin(winkel1)
     gz = np.sin(winkel2)
     g_vec = np.array([gx, gy, gz])
-    dp = (p_stato - params.p_cyto) * 1e-12
+    dp = (p_stato - params.p_cyto)
     F_grav = (4/3) * np.pi * r**3 * dp * params.g_mag * g_vec
 
     # --- 3. ACTIN AXIAL (Asymmetrisch nach Braun 2001) ---
