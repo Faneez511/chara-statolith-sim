@@ -13,9 +13,12 @@ class Parameters:
 
         #Kräfte/Physik
 
-        self.ACTIN_DECAY_LENGTH = 4.0        
-        self.ACTIN_MAX_FORCE = 2.0e-4
-        self.ACTIN_LATERAL_FORCE = 0.5e-4
+        self.ACTIN_DECAY_BASAL = 4.0
+        self.ACTIN_DECAY_APICAL = 2.0        
+        self.ACTIN_FORCE_APICAL = 2.0e-4
+        self.ACTIN_FORCE_BASAL = 0.7e-4
+        self.ACTIN_DECAY_LENGTH = 4.0
+        self.ACTIN_LATERAL_FORCE = 0.4e-4
         self.MAX_STEP = 0.2  # Maximale Verschiebung pro Zeitschritt in µm (Sicherheitsanker!)
         
 
