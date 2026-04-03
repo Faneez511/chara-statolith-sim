@@ -6,7 +6,9 @@ def compute_brownian_motion(s, params, dt):
 
     
     dist_x = params.LIMIT_X - x
-    dist_radial = params.raumy - np.sqrt(y**2 + z**2)
+    x_safe = min(max(x, 0.0), params.TIP_POSITION_X)
+    local_raumy = params.raumy * np.sqrt(1.0 - (x_safe / params.TIP_POSITION_X)**2)
+    dist_radial = local_raumy - np.sqrt(y**2 + z**2)
     d_wand = max(min(dist_x, dist_radial), 0)  
 
     f_wand = np.exp(-d_wand / params.lambd)

@@ -13,11 +13,13 @@ def compute_forces_single(s, params):
     r_dist = np.sqrt(y**2 + z**2)
     
     # Wahrer Abstand zur gekrümmten Zellwand (Nutzen wir für Viskosität UND Aktin)
-    dist_radial = local_raumy - r_dist
+    # Wahrer Abstand der Partikel-Oberfläche zur gekrümmten Zellwand
+    dist_radial = local_raumy - r_dist - r
 
     # --- 1. WANDABSTAND & EFFEKTIVE VISKOSITÄT ---
-    dist_x = params.LIMIT_X - x
-    d_wand = max(min(dist_x, dist_radial), 0)
+    dist_x_apikal = params.LIMIT_X - x - r
+    dist_x_basal = x - params.ACTIN_MIN_X - r
+    d_wand = max(min(dist_x_apikal, dist_x_basal, dist_radial), 0)
 
     eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
     mobility = 1.0 / (6 * np.pi * eta_eff * r)

@@ -5,9 +5,9 @@ class Parameters:
 
         #Zellgeometrie
 
-        self.LIMIT_X = 50.0                  #Begrenzung Subapkiale Zone
-        self.ACTIN_MAX_X = 40.0
         self.TIP_POSITION_X = 50.0           #Länge der Zelle in µm
+        self.LIMIT_X = self.TIP_POSITION_X   #Begrenzung Subapkiale Zone
+        self.ACTIN_MAX_X = 40.0
         self.ACTIN_MIN_X = 20.0              #Begrenzung Apikale Zone
         self.CELL_WALL = 1.5
 
@@ -23,10 +23,10 @@ class Parameters:
         
 
         self.g_mag = 9.81e6             #Gravitationskraft
-        self.eta_parallel = 139e-6
+        self.eta_parallel = 139e-6      #[g/(µm*s)] Viskosität entspr. 139 mPa*s
         self.lambd = 5
-        self.p_cyto = 1.0139 * 1e-12
-        self.Kb = 1.38e-23 * 1e15
+        self.p_cyto = 1.0139 * 1e-12     
+        self.Kb = 1.38e-23 * 1e15       #[g*µm^2/s^2*K] Boltzmann-Konstante
         self.Temp = 293
         self.winkel_in_XY = -90
         self.winkel_zu_Z = 0

@@ -11,3 +11,4 @@ plots/
 .env
 .DS_Store
 .VSCodeCounter/
+plots_angles_analysis/

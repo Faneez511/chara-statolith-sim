@@ -99,8 +99,23 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 
                 ri = sim_warmup[i][3]
                 rj = sim_warmup[j][3]
-                mob_i = 1.0 / (6 * np.pi * params.eta_parallel * ri)
-                mob_j = 1.0 / (6 * np.pi * params.eta_parallel * rj)
+                # Mobilität für Partikel i mit korrekter lokaler Wandreibung
+                x_safe_i = min(max(sim_warmup[i][0], 0.0), params.TIP_POSITION_X)
+                local_raumy_i = params.raumy * np.sqrt(1.0 - (x_safe_i / params.TIP_POSITION_X)**2)
+                dist_radial_i = local_raumy_i - np.sqrt(sim_warmup[i][1]**2 + sim_warmup[i][2]**2)
+                d_wand_i = max(min(params.LIMIT_X - sim_warmup[i][0], dist_radial_i), 0)
+                eta_eff_i = params.eta_parallel * (1.0 + np.exp(-d_wand_i / params.lambd))
+                wall_effect_i = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand_i / (params.wall_layer_thickness / 3.0))
+                mob_i = (1.0 / (6 * np.pi * eta_eff_i * ri)) * (1.0 - wall_effect_i)
+
+                # Mobilität für Partikel j mit korrekter lokaler Wandreibung
+                x_safe_j = min(max(sim_warmup[j][0], 0.0), params.TIP_POSITION_X)
+                local_raumy_j = params.raumy * np.sqrt(1.0 - (x_safe_j / params.TIP_POSITION_X)**2)
+                dist_radial_j = local_raumy_j - np.sqrt(sim_warmup[j][1]**2 + sim_warmup[j][2]**2)
+                d_wand_j = max(min(params.LIMIT_X - sim_warmup[j][0], dist_radial_j), 0)
+                eta_eff_j = params.eta_parallel * (1.0 + np.exp(-d_wand_j / params.lambd))
+                wall_effect_j = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand_j / (params.wall_layer_thickness / 3.0))
+                mob_j = (1.0 / (6 * np.pi * eta_eff_j * rj)) * (1.0 - wall_effect_j)
                 
                 f_vec = f_mag * (rij / dist)
                 velocities[i] -= f_vec * mob_i

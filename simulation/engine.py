@@ -28,11 +28,14 @@ class SimulationEngine:
         pos_z = pos[:, 2]
 
         dist_x = self.params.LIMIT_X - pos_x
-        dist_radial = self.params.raumy - np.sqrt(pos_y**2 + pos_z**2)
+        x_safe = np.clip(pos_x, 0.0, self.params.TIP_POSITION_X)
+        local_raumy_arr = self.params.raumy * np.sqrt(1.0 - (x_safe / self.params.TIP_POSITION_X)**2)
+        dist_radial = local_raumy_arr - np.sqrt(pos_y**2 + pos_z**2)
         d_wand = np.maximum(np.minimum(dist_x, dist_radial), 0.0)
         
         wall_effect = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand / (self.params.wall_layer_thickness / 3.0))
-        mobilities = (1.0 / (6 * np.pi * self.params.eta_parallel * radii)) * (1.0 - wall_effect)
+        eta_eff_arr = self.params.eta_parallel * (1.0 + np.exp(-d_wand / (self.params.lambd)))
+        mobilities = (1.0 / (6 * np.pi * eta_eff_arr * radii)) * (1.0 - wall_effect)        
 
         # --- 3. Lennard-Jones Interaktion vektorisiert ---
         # Matrix aller Distanzvektoren (i nach j)
