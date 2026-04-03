@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.npy
 data/
+data_old/
 plots/
 *.pdf
 *.py[cod]

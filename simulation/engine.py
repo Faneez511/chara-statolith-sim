@@ -15,98 +15,85 @@ class SimulationEngine:
     def step(self, dt):
         self.velocities[:] = 0.0
 
+        # --- 1. Deterministische Kräfte (Gravitation, Aktin) ---
         for i, s in enumerate(self.state):
             self.velocities[i] += compute_forces_single(s, self.params)
             
+        pos = self.state[:, 0:3]
+        radii = self.state[:, 3]
 
-        N = len(self.state)
+        # --- 2. Wand-Effekt (Mobilität) vektorisiert ---
+        pos_x = pos[:, 0]
+        pos_y = pos[:, 1]
+        pos_z = pos[:, 2]
 
-        for i in range(N):
-            for j in range(i + 1, N):
-                rij = self.state[j, 0:3] - self.state[i, 0:3]
-                dist = np.linalg.norm(rij)
-                
-                if dist < 1e-10 or dist > self.params.lj_cutoff:
-                    continue
-                
-                # Lennard-Jones: anziehed bei mittlerer Distanz, abstoßend bei Kontakt
-                sig = self.params.lj_sigma  # ~1.5 µm (Partikeldurchmesser)
-                eps = self.params.lj_eps    # Stärke der Anziehung
-
-                dist_eff = max(dist, 0.8 * sig)
-                
-                sr6 = (sig / dist_eff) ** 6
-                f_mag = 24 * eps * (2 * sr6**2 - sr6) / dist_eff
-                f_mag = np.clip(f_mag, -1e-2, 1e-2)
+        dist_x = self.params.LIMIT_X - pos_x
+        dist_radial = self.params.raumy - np.sqrt(pos_y**2 + pos_z**2)
+        d_wand = np.maximum(np.minimum(dist_x, dist_radial), 0.0)
         
-                
-                
-                # Mobility für beide Partikel lokal berechnen
-                ri = self.state[i, 3]
-                rj = self.state[j, 3]
+        wall_effect = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand / (self.params.wall_layer_thickness / 3.0))
+        mobilities = (1.0 / (6 * np.pi * self.params.eta_parallel * radii)) * (1.0 - wall_effect)
 
-                # Effektive Wand-Mobilität für Partikel i
-                dist_x_i = self.params.LIMIT_X - self.state[i, 0]
-                dist_radial_i = self.params.raumy - np.sqrt(self.state[i, 1]**2 + self.state[i, 2]**2)
-                d_wand_i = max(min(dist_x_i, dist_radial_i), 0)
-                wall_effect_i = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand_i / (self.params.wall_layer_thickness / 3.0))
-                mob_i = (1.0 / (6 * np.pi * self.params.eta_parallel * ri)) * (1.0 - wall_effect_i)
+        # --- 3. Lennard-Jones Interaktion vektorisiert ---
+        # Matrix aller Distanzvektoren (i nach j)
+        pos_j = pos[np.newaxis, :, :]
+        pos_i = pos[:, np.newaxis, :]
+        rij = pos_j - pos_i
+        
+        # Matrix der skalaren Distanzen
+        dist = np.linalg.norm(rij, axis=2)
 
-                # Effektive Wand-Mobilität für Partikel j
-                dist_x_j = self.params.LIMIT_X - self.state[j, 0]
-                dist_radial_j = self.params.raumy - np.sqrt(self.state[j, 1]**2 + self.state[j, 2]**2)
-                d_wand_j = max(min(dist_x_j, dist_radial_j), 0)
-                wall_effect_j = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand_j / (self.params.wall_layer_thickness / 3.0))
-                mob_j = (1.0 / (6 * np.pi * self.params.eta_parallel * rj)) * (1.0 - wall_effect_j)
-                
-                f_vec = f_mag * (rij / dist)
-                self.velocities[i] -= f_vec * mob_i
-                self.velocities[j] += f_vec * mob_j
+        # Maske für Interaktionen innerhalb des Cutoffs (ignoriert i=j)
+        mask = (dist > 1e-10) & (dist <= self.params.lj_cutoff)
 
-        # Verhindert Explosionen bei harten Kollisionen
-        for i in range(len(self.velocities)):
-            v = self.velocities[i]
-            # Betrag der Geschwindigkeit berechnen
-            v_mag = np.linalg.norm(v)
-            
-            # Wie weit würde es fliegen?
-            dist = v_mag * dt
-            
-            if dist > self.params.MAX_STEP:
-                # Skalierungsfaktor berechnen + "bremsen"
-                scale = self.params.MAX_STEP / dist
-                self.velocities[i] *= scale
+        # Division durch 0 absichern
+        dist_safe = np.where(mask, dist, 1.0)
+        dist_eff = np.maximum(dist_safe, 0.8 * self.params.lj_sigma)
+        
+        sig = self.params.lj_sigma
+        eps = self.params.lj_eps
+        
+        # LJ-Kraftbetrag
+        sr6 = (sig / dist_eff) ** 6
+        f_mag = 24 * eps * (2 * sr6**2 - sr6) / dist_eff
+        f_mag = np.clip(f_mag, -1e-2, 1e-2)
 
+        # Vektorielle Kräfte berechnen
+        f_vec = np.zeros_like(rij)
+        f_vec[mask] = f_mag[mask, np.newaxis] * (rij[mask] / dist_safe[mask, np.newaxis])
 
+        # Summe der Kräfte auf Partikel i (Kraft zeigt weg von j, daher -f_vec)
+        total_lj_force_on_i = -np.sum(f_vec, axis=1)
+
+        # Geschwindigkeiten updaten (Kraft * individuelle Mobilität)
+        self.velocities += total_lj_force_on_i * mobilities[:, np.newaxis]
+
+        # --- 4. Velocity Clipping vektorisiert ---
+        v_mag = np.linalg.norm(self.velocities, axis=1)
+        step_dist = v_mag * dt
+        
+        clip_mask = step_dist > self.params.MAX_STEP
+        scale = np.where(clip_mask, self.params.MAX_STEP / step_dist, 1.0)
+        self.velocities *= scale[:, np.newaxis]
+
+        # --- 5. Euler-Maruyama Integration & Constraints ---
         for i, s in enumerate(self.state):
             r = s[3]
-            pos = s[0:3]
-            new_pos = pos + self.velocities[i] * dt
+            current_pos = s[0:3]
+            new_pos = current_pos + self.velocities[i] * dt
             new_pos += compute_brownian_motion(s, self.params, dt)
             self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
-        
-
         self.current_time += dt
 
-    # In SimulationEngine Klasse (engine.py)
-
     def get_current_velocities(self):
-        # Gibt den Mittelwert der aktuellen Geschwindigkeitsvektoren zurück
         return np.mean(self.velocities, axis=0)
 
     def get_contact_count(self):
-        # Zählt, wie viele Partikel-Paare sich berühren (Abstand < 1.1 * Durchmesser)
-        count = 0
-        N = len(self.state)
-        threshold = 1.1 * self.params.lj_sigma
-        for i in range(N):
-            for j in range(i + 1, N):
-                dist = np.linalg.norm(self.state[i, 0:3] - self.state[j, 0:3])
-                if dist < threshold:
-                    count += 1
-        return count
-
+        pos = self.state[:, 0:3]
+        dist = np.linalg.norm(pos[np.newaxis, :, :] - pos[:, np.newaxis, :], axis=2)
+        mask = (dist > 1e-10) & (dist < 1.1 * self.params.lj_sigma)
+        return np.sum(mask) // 2
 
     def reset(self):
         self.state[:] = self.initial_state[:]
