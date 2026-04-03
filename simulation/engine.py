@@ -44,8 +44,20 @@ class SimulationEngine:
                 # Mobility für beide Partikel lokal berechnen
                 ri = self.state[i, 3]
                 rj = self.state[j, 3]
-                mob_i = 1.0 / (6 * np.pi * self.params.eta_parallel * ri)
-                mob_j = 1.0 / (6 * np.pi * self.params.eta_parallel * rj)
+
+                # Effektive Wand-Mobilität für Partikel i
+                dist_x_i = self.params.LIMIT_X - self.state[i, 0]
+                dist_radial_i = self.params.raumy - np.sqrt(self.state[i, 1]**2 + self.state[i, 2]**2)
+                d_wand_i = max(min(dist_x_i, dist_radial_i), 0)
+                wall_effect_i = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand_i / (self.params.wall_layer_thickness / 3.0))
+                mob_i = (1.0 / (6 * np.pi * self.params.eta_parallel * ri)) * (1.0 - wall_effect_i)
+
+                # Effektive Wand-Mobilität für Partikel j
+                dist_x_j = self.params.LIMIT_X - self.state[j, 0]
+                dist_radial_j = self.params.raumy - np.sqrt(self.state[j, 1]**2 + self.state[j, 2]**2)
+                d_wand_j = max(min(dist_x_j, dist_radial_j), 0)
+                wall_effect_j = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand_j / (self.params.wall_layer_thickness / 3.0))
+                mob_j = (1.0 / (6 * np.pi * self.params.eta_parallel * rj)) * (1.0 - wall_effect_j)
                 
                 f_vec = f_mag * (rij / dist)
                 self.velocities[i] -= f_vec * mob_i
@@ -70,7 +82,7 @@ class SimulationEngine:
             r = s[3]
             pos = s[0:3]
             new_pos = pos + self.velocities[i] * dt
-            new_pos += compute_brownian_motion(s, self.params)
+            new_pos += compute_brownian_motion(s, self.params, dt)
             self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
         

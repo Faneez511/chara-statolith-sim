@@ -1,6 +1,6 @@
 import numpy as np
 
-def compute_brownian_motion(s, params):
+def compute_brownian_motion(s, params, dt):
 
     x, y, z, r, _ = s
 
@@ -19,6 +19,6 @@ def compute_brownian_motion(s, params):
     D = params.Kb * params.Temp / (6 * np.pi * eta_eff * r) * mobility_factor
 
     
-    noise_vec = np.sqrt(2 * D * params.dt) * np.random.normal(0, 1, 3)
+    noise_vec = np.sqrt(2 * D * dt) * np.random.normal(0, 1, 3)
 
     return noise_vec
