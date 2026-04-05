@@ -11,7 +11,7 @@ from scipy.stats import linregress
 # ==========================================
 MODE = 'angles'  # Optionen: 'angles', 'conditions', 'single'
 
-BASE_DIR = "data/monster_run_20260403_032037"
+BASE_DIR = "data/monster_run_20260403_172349"
 OUT_DIR = f"plots_{MODE}_analysis"
 
 RUN_AUDIT = True
