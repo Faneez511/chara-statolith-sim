@@ -28,7 +28,7 @@ class Parameters:
         self.p_cyto = 1.0139 * 1e-12     
         self.Kb = 1.38e-23 * 1e15       #[g*µm^2/s^2*K] Boltzmann-Konstante
         self.Temp = 293
-        self.winkel_in_XY = -90
+        self.winkel_in_XY = 0
         self.winkel_zu_Z = 0
 
 

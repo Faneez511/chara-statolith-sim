@@ -146,3 +146,50 @@ Das Projekt folgt strikt dem **Model-View-Controller (MVC)** Pattern, um wissens
 
 **Autor:** Faneez Shah Polat  
 *Biotechnologie, 2. Semester, HAW-Hamburg*
+
+```
+Chara_Statolith_Sim
+├─ README.md
+├─ batch_runs
+│  ├─ batch_runner_V3_extension.py
+│  ├─ batch_runner_angles.py
+│  ├─ batch_runner_conditions.py
+│  └─ batch_runner_sensitivity_analysis.py
+├─ config
+│  ├─ __init__.py
+│  └─ parameters.py
+├─ docs
+│  ├─ boxplot_com_x.png
+│  ├─ boxplot_velocity_x.png
+│  ├─ boxplot_velocity_y.png
+│  ├─ lineplot_com_x.png
+│  ├─ lineplots_kinetics.png
+│  ├─ proportionalitaets_beweis.png
+│  ├─ screenshot.png
+│  ├─ simulation_analysis_25um_2000s_v1.png
+│  ├─ simulation_analysis_25um_600s_v1.png
+│  ├─ simulation_summary_25um_2000s_v1.csv
+│  └─ simulation_summary_25um_600s_v1.csv
+├─ geometry
+│  ├─ __init__.py
+│  └─ cell_geometry.py
+├─ main.py
+├─ physics
+│  ├─ __init__.py
+│  ├─ brownian_motion.py
+│  ├─ constraints.py
+│  └─ forces.py
+├─ requirements.txt
+├─ simulation
+│  ├─ __init__.py
+│  ├─ engine.py
+│  ├─ logger.py
+│  └─ warmup.py
+├─ ui
+│  ├─ __init__.py
+│  └─ input_dialog.py
+└─ visualization
+   ├─ __init__.py
+   └─ plotter.py
+
+```

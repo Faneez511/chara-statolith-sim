@@ -15,7 +15,7 @@ def initialize_plotter(sim_state, ellipsoid_pos_x, innen):
     p.add_mesh(ellipsoid_pos_x, color='r', smooth_shading=True, opacity=0.4)
     p.add_mesh(innen, color='g', smooth_shading=True, opacity=0.1)
     actin_plane = pv.Plane(center=(45, 0, 0), direction=(1, 0, 0), i_size=15, j_size=15)
-    p.add_mesh(actin_plane, color='yellow', style='wireframe', opacity=0.5)
+    #p.add_mesh(actin_plane, color='yellow', style='wireframe', opacity=0.5)
 
     for s in sim_state:
         sphere = pv.Sphere(radius=s[3], center=(0,0,0))
