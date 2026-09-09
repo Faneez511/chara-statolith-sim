@@ -12,7 +12,7 @@ def get_rhizoid_diameter():
             title="Konfiguration", 
             prompt="Bitte Rhizoid-Durchmesser eingeben (µm):", 
             initialvalue=15.0,
-            minvalue=5.0, 
+            minvalue=15.0, 
             maxvalue=100.0
         )
     finally:
