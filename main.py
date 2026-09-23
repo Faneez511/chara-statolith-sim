@@ -1,5 +1,8 @@
 # main.py
 import os
+os.environ["QT_API"] = "pyqt5" 
+os.environ["PYVISTA_USE_IPYVTK"] = "true"
+import pyvista as pv
 import time
 from simulation.logger import DataLogger
 print(f"Aktuelles Arbeitsverzeichnis: {os.getcwd()}")
@@ -10,7 +13,6 @@ from simulation.warmup import get_initial_state
 from config.parameters import Parameters
 from visualization.plotter import initialize_plotter, update_plotter
 from simulation.engine import SimulationEngine
-import pyvista as pv
 import numpy as np
 import random
 
