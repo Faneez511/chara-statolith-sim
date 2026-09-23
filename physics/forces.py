@@ -1,4 +1,5 @@
 import numpy as np
+from physics.hydrodynamics import get_local_mobility
 
 def compute_forces_single(s, params):
     x, y, z, r, p_stato = s
@@ -12,21 +13,12 @@ def compute_forces_single(s, params):
     # Abstand von der zentralen Achse
     r_dist = np.sqrt(y**2 + z**2)
     
-    # Wahrer Abstand zur gekrümmten Zellwand (Nutzen wir für Viskosität UND Aktin)
     # Wahrer Abstand der Partikel-Oberfläche zur gekrümmten Zellwand
     dist_radial = local_raumy - r_dist - r
 
-    # --- 1. WANDABSTAND & EFFEKTIVE VISKOSITÄT ---
-    dist_x_apikal = params.LIMIT_X - x - r
-    dist_x_basal = x - params.ACTIN_MIN_X - r
-    d_wand = max(min(dist_x_apikal, dist_x_basal, dist_radial), 0)
-
-    eta_eff = params.eta_parallel * (1 + np.exp(-d_wand / params.lambd))
-    mobility = 1.0 / (6 * np.pi * eta_eff * r)
-    
-    # Weicher, exponentieller Übergang für die Wandreibung
-    wall_effect = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand / (params.wall_layer_thickness / 3.0))
-    mobility *= (1.0 - wall_effect)
+    # --- 1. LOKALE MOBILITÄT (ZENTRAL ÜBER FDT-FIX) ---
+    # Nutzt ab sofort die exakt gleiche Logik wie Brownian Motion, Engine und Warmup!
+    mobility = get_local_mobility(s[:3], r, params)
 
     # --- 2. GRAVITATION ---
     # Quelle: Stokes-Sedimentation, Braun et al. 2002

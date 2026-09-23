@@ -3,6 +3,7 @@ import os
 import numpy as np
 from physics.constraints import apply_constraints
 from physics.forces import compute_forces_single
+from physics.hydrodynamics import get_local_mobility
 
 def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     """
@@ -71,16 +72,15 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
     dt_warm = 0.05
     steps = 10000
 
-    # --- WARM-UP LOOP (Nutzt exakt dieselbe Physik wie engine.py!) ---
+    # --- WARM-UP LOOP (Nutzt exakt dieselbe Physik via forces.py und hydrodynamics.py!) ---
     for step in range(steps):
         velocities = np.zeros((len(sim_warmup), 3))
 
         # 1. Alle externen Kräfte berechnen (via forces.py)
-        # Da wir params.winkel... oben auf 0 gesetzt haben, zieht forces.py jetzt perfekt in +X Richtung
         for i in range(len(sim_warmup)):
             velocities[i] += compute_forces_single(sim_warmup[i], params)
 
-        # 2. Lennard-Jones Interaktionen (Exakt wie in engine.py - zieht Partikel sanft zusammen)
+        # 2. Lennard-Jones Interaktionen (Zentral über get_local_mobility abgesichert)
         for i in range(len(sim_warmup)):
             for j in range(i + 1, len(sim_warmup)):
                 rij = sim_warmup[j][0:3] - sim_warmup[i][0:3]
@@ -99,23 +99,10 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
                 
                 ri = sim_warmup[i][3]
                 rj = sim_warmup[j][3]
-                # Mobilität für Partikel i mit korrekter lokaler Wandreibung
-                x_safe_i = min(max(sim_warmup[i][0], 0.0), params.TIP_POSITION_X)
-                local_raumy_i = params.raumy * np.sqrt(1.0 - (x_safe_i / params.TIP_POSITION_X)**2)
-                dist_radial_i = local_raumy_i - np.sqrt(sim_warmup[i][1]**2 + sim_warmup[i][2]**2)
-                d_wand_i = max(min(params.LIMIT_X - sim_warmup[i][0], dist_radial_i), 0)
-                eta_eff_i = params.eta_parallel * (1.0 + np.exp(-d_wand_i / params.lambd))
-                wall_effect_i = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand_i / (params.wall_layer_thickness / 3.0))
-                mob_i = (1.0 / (6 * np.pi * eta_eff_i * ri)) * (1.0 - wall_effect_i)
-
-                # Mobilität für Partikel j mit korrekter lokaler Wandreibung
-                x_safe_j = min(max(sim_warmup[j][0], 0.0), params.TIP_POSITION_X)
-                local_raumy_j = params.raumy * np.sqrt(1.0 - (x_safe_j / params.TIP_POSITION_X)**2)
-                dist_radial_j = local_raumy_j - np.sqrt(sim_warmup[j][1]**2 + sim_warmup[j][2]**2)
-                d_wand_j = max(min(params.LIMIT_X - sim_warmup[j][0], dist_radial_j), 0)
-                eta_eff_j = params.eta_parallel * (1.0 + np.exp(-d_wand_j / params.lambd))
-                wall_effect_j = (1.0 - params.wall_mobility_factor) * np.exp(-d_wand_j / (params.wall_layer_thickness / 3.0))
-                mob_j = (1.0 / (6 * np.pi * eta_eff_j * rj)) * (1.0 - wall_effect_j)
+                
+                # Exakte, zentrale Mobilität für i und j abrufen
+                mob_i = get_local_mobility(sim_warmup[i][0:3], ri, params)
+                mob_j = get_local_mobility(sim_warmup[j][0:3], rj, params)
                 
                 f_vec = f_mag * (rij / dist)
                 velocities[i] -= f_vec * mob_i
@@ -134,7 +121,6 @@ def get_initial_state(N, durchmesser_rhizoid, raumy, params):
         # 4. Positionen updaten und Constraints anwenden
         for i in range(len(sim_warmup)):
             sim_warmup[i][0:3] += velocities[i] * dt_warm
-            # Nutzt exakt dein neues Constraint-Modul für perfekte Geometrie
             sim_warmup[i][0:3] = apply_constraints(sim_warmup[i][0:3], sim_warmup[i][3], params)
             
         # Terminal-Output alle 1000 Schritte zur Überwachung

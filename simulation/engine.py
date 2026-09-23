@@ -2,6 +2,7 @@ import numpy as np
 from physics.forces import compute_forces_single
 from physics.brownian_motion import compute_brownian_motion
 from physics.constraints import apply_constraints
+from physics.hydrodynamics import get_local_mobility
 
 
 class SimulationEngine:
@@ -22,20 +23,11 @@ class SimulationEngine:
         pos = self.state[:, 0:3]
         radii = self.state[:, 3]
 
-        # --- 2. Wand-Effekt (Mobilität) vektorisiert ---
-        pos_x = pos[:, 0]
-        pos_y = pos[:, 1]
-        pos_z = pos[:, 2]
-
-        dist_x = self.params.LIMIT_X - pos_x
-        x_safe = np.clip(pos_x, 0.0, self.params.TIP_POSITION_X)
-        local_raumy_arr = self.params.raumy * np.sqrt(1.0 - (x_safe / self.params.TIP_POSITION_X)**2)
-        dist_radial = local_raumy_arr - np.sqrt(pos_y**2 + pos_z**2)
-        d_wand = np.maximum(np.minimum(dist_x, dist_radial), 0.0)
-        
-        wall_effect = (1.0 - self.params.wall_mobility_factor) * np.exp(-d_wand / (self.params.wall_layer_thickness / 3.0))
-        eta_eff_arr = self.params.eta_parallel * (1.0 + np.exp(-d_wand / (self.params.lambd)))
-        mobilities = (1.0 / (6 * np.pi * eta_eff_arr * radii)) * (1.0 - wall_effect)        
+        # --- 2. Wand-Effekt (Mobilität) zentral über hydrodynamics.py ---
+        # Berechnet die exakte Mobilität für alle Partikel auf einmal (inkl. Basal-, Apikal- und Radialwand)
+        mobilities = np.zeros(len(self.state))
+        for i, s in enumerate(self.state):
+            mobilities[i] = get_local_mobility(s[0:3], radii[i], self.params)
 
         # --- 3. Lennard-Jones Interaktion vektorisiert ---
         # Matrix aller Distanzvektoren (i nach j)
@@ -84,7 +76,7 @@ class SimulationEngine:
             r = s[3]
             current_pos = s[0:3]
             new_pos = current_pos + self.velocities[i] * dt
-            new_pos += compute_brownian_motion(s, self.params, dt)
+            new_pos += compute_brownian_motion(current_pos, r, self.params) 
             self.state[i][0:3] = apply_constraints(new_pos, r, self.params)
 
         self.current_time += dt
